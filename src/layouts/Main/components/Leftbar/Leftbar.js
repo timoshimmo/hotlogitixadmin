@@ -3,14 +3,10 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link as RouterLink } from 'react-router-dom';
-import { Divider, Drawer } from '@material-ui/core';
 
 import SvgIcon from '@material-ui/core/SvgIcon';
-import InputIcon from '@material-ui/icons/Input';
-
 import { SidebarNav } from './components';
 
-import Badge from '@material-ui/core/Badge';
 
 /*
 [theme.breakpoints.up('lg')]: {
@@ -63,21 +59,8 @@ function HomeIcon(props) {
   );
 }
 
-/*
-<path d="M7.5,13.4,18.3,5l10.8,8.4V26.6A2.4,2.4,0,0,1,26.7,29H9.9a2.4,2.4,0,0,1-2.4-2.4h0Z" transform="translate(0)"/>
-<path d="M22.5,42V30h7.2V42" transform="translate(-7.8 -13)"/>
-*/
 
-function UsersIcon(props) {
-  return (
-    <SvgIcon {...props} viewBox="0 0 23.6 26">
-      <g transform="translate(-6.5 -4)">
-        <path d="M7.5,13.4,18.3,5l10.8,8.4V26.6A2.4,2.4,0,0,1,26.7,29H9.9a2.4,2.4,0,0,1-2.4-2.4h0Z" transform="translate(0)"/>
-        <path d="M22.5,42V30h7.2V42" transform="translate(-7.8 -13)"/>
-      </g>
-    </SvgIcon>
-  );
-}
+
 //fill:#010e1c;stroke:#010e1c;stroke-width:0.5px;
 
 function TransactionsIcon(props) {
@@ -133,16 +116,6 @@ function CasesIcon(props) {
   );
 }
 
-function ProfileIcon(props) {
-  return (
-    <SvgIcon {...props} viewBox="0 0 23.333 26">
-      <g transform="translate(-9 -6.5)">
-        <path d="M31.333,45.5V42.833A5.333,5.333,0,0,0,26,37.5H15.333A5.333,5.333,0,0,0,10,42.833h0V45.5" transform="translate(0 -14)"/>
-        <path d="M30.667,12.833A5.333,5.333,0,1,1,25.333,7.5,5.333,5.333,0,0,1,30.667,12.833Z" transform="translate(-4.667)"/>
-      </g>
-    </SvgIcon>
-  );
-}
 
 const Leftbar = props => {
 
@@ -150,23 +123,6 @@ const Leftbar = props => {
 
   const classes = useStyles();
 
-  let userData = {};
-  if (typeof localStorage !== 'undefined') {
-      const user = localStorage.getItem('user');
-      if(user !== null) {
-        const data = JSON.parse(user);
-        userData = data;
-      }
-  }
-
-  /*
-
-  {
-    title: 'Home',
-    href: '/home',
-    icon: <HomeIcon fontSize="small" style={{ fill:'none', stroke:'#010e1c', strokeLinecap:'round', strokeLinejoin:'round', strokeWidth:2 }} />
-  },
-  */
 
   const pages = [
     {

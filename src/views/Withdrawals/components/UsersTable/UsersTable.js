@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { makeStyles } from '@material-ui/core/styles';
@@ -8,18 +7,12 @@ import {
   Card,
   CardActions,
   CardContent,
-  Avatar,
-  Checkbox,
   Table,
   TableBody,
   TableCell,
-  TableHead,
   TableRow,
-  Typography,
   TablePagination,
-  TableContainer,
-  Button,
-  Tab
+  TableContainer
 } from '@material-ui/core';
 import { TableToolbar, TableHeader, UsersToolbar } from './components';
 import NumberFormat from 'react-number-format';
@@ -100,11 +93,8 @@ const UsersTable = props => {
 
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('dateofTransaction');
-  const [selectedCards, setSelectedCards] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [page, setPage] = useState(0);
-  const [selectedList, setSelectedList] = useState([]);
-  const [loading, setLoading] = useState(false);
 
 
   const handleRequestSort = (event, property) => {
@@ -126,8 +116,6 @@ const UsersTable = props => {
   const handleSearchChange = event => {
     handleFilter(event.target.value);
   }
-
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, usersList.length - page * rowsPerPage);
 
   return (
 

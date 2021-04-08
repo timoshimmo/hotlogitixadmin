@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { makeStyles } from '@material-ui/core/styles';
@@ -9,20 +8,13 @@ import {
   Card,
   CardActions,
   CardContent,
-  Avatar,
-  Checkbox,
   Table,
   TableBody,
   TextField,
   TableCell,
-  TableHead,
   TableRow,
-  Typography,
   TablePagination,
   TableContainer,
-  Button,
-  Tab,
-  FormHelperText,
   FormControl,
   InputLabel,
   Drawer,
@@ -31,8 +23,6 @@ import {
 import { TableToolbar, TableHeader, UsersToolbar } from './components';
 import NumberFormat from 'react-number-format';
 import SERVICES from '../../../../util/webservices';
-import MomentUtils from '@date-io/moment';
-import { DatePicker, KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 function descendingComparator(a, b, orderBy) {
@@ -281,11 +271,8 @@ const UsersTable = props => {
 
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('fullname');
-  const [selectedCards, setSelectedCards] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [page, setPage] = useState(0);
-  const [selectedList, setSelectedList] = useState([]);
-  const [loading, setLoading] = React.useState(false);
   const [suspendLoading, setSuspendLoading] = useState(false);
   const [toggleDrawer, setToggleDrawer] = useState();
 
@@ -386,8 +373,6 @@ const UsersTable = props => {
       })
     }
   }
-
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, usersList.length - page * rowsPerPage);
 
   return (
 
@@ -579,7 +564,7 @@ const UsersTable = props => {
                      variant="contained"
                     className={classes.unSubscribeButtonStyle}
                     disabled={suspendLoading}
-                    onClick={handleSuspend}
+                    onClick={handleTerminate}
                     >
                     Terminate
                     {suspendLoading && <CircularProgress size={18} className={classes.buttonSaveProgress} />}

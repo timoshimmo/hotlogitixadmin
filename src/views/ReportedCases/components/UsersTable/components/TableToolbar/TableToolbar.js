@@ -1,23 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import clsx from 'clsx';
-import { lighten, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import PrintIcon from '@material-ui/icons/Print';
-import FilterListIcon from '@material-ui/icons/FilterList';
-
-/*
-
-<Tooltip title="Filter list">
-  <IconButton aria-label="filter list">
-    <FilterListIcon />
-  </IconButton>
-</Tooltip>
-*/
 
 const useToolbarStyles = makeStyles(theme => ({
   root: {

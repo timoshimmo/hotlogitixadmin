@@ -1,12 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import clsx from 'clsx';
+import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
-import PerfectScrollbar from 'react-perfect-scrollbar';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Checkbox,
   TableCell,
   TableHead,
   TableRow

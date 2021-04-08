@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useMediaQuery, Hidden  } from '@material-ui/core';
 
-import { Leftbar, Rightbar, MobileBottombar, MobileMenu } from './components';
-import SERVICES from '../../util/webservices';
+import { Leftbar } from './components';
 
 /*
 [theme.breakpoints.up('sm')]: {
@@ -85,56 +83,6 @@ const Main = props => {
     defaultMatches: true
   });
 
-  const [openSidebar, setOpenSidebar] = useState(false);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [openMenu, setOpenMenu] = React.useState(false);
-  const [invisible, setInvisible] = React.useState(false);
-
-  const [msgInvisible, setMsgInvisible] = React.useState(false);
-
-  let userData = {};
-  if (typeof localStorage !== 'undefined') {
-      const user = localStorage.getItem('user');
-      if(user !== null) {
-        const data = JSON.parse(user);
-        userData = data;
-      }
-  }
-
-  const handleSidebarOpen = () => {
-    setOpenSidebar(true);
-  };
-
-  const handleSidebarClose = () => {
-    setOpenSidebar(false);
-  };
-
-  const shouldOpenSidebar = isDesktop ? true : openSidebar;
-
-//  const openDialog = true;
-//  const closeDialog = false;
-
-    const handleDialogOpen = () => {
-      setOpenDialog(true);
-    };
-
-    const handleDialogClose = () => {
-      setOpenDialog(false);
-    };
-
-    const handleMenuClose = () => {
-      setOpenMenu(false);
-    };
-    const handleMenuToggle = () => {
-      setOpenMenu(true);
-    };
-
-  const ScrollToTop = () => {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
-    }
 
 
   /*

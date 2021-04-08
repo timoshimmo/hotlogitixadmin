@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { loadCSS } from 'fg-loadcss';
-import clsx from 'clsx';
-import { Link as RouterLink, withRouter, useHistory } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { Link as RouterLink, withRouter } from 'react-router-dom';
 import validate from 'validate.js';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
@@ -23,7 +21,6 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import MuiAlert from '@material-ui/lab/Alert';
 import Collapse from '@material-ui/core/Collapse';
 import CloseIcon from '@material-ui/icons/Close';
-import Icon from '@material-ui/core/Icon';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
@@ -381,7 +378,7 @@ firebase.initializeApp(firebaseConfig);
 */
 const SignUp = props => {
   const classes = useStyles();
-  let history = useHistory();
+  //let history = useHistory();
 
   const [formState, setFormState] = useState({
     isValid: false,
@@ -395,7 +392,7 @@ const SignUp = props => {
   const [open, setOpen] = React.useState(false);
   const [serverError, setServerError] = React.useState(null);
   const [showPassword, setShowPassword] = React.useState(false);
-  const [socialLoading, setSocialLoading] = React.useState(false);
+//  const [socialLoading, setSocialLoading] = React.useState(false);
 
   useEffect(() => {
     loadCSS(
@@ -435,7 +432,7 @@ const SignUp = props => {
     setShowPassword(!showPassword);
   };
 
-  const getReference = () => {
+/*  const getReference = () => {
 		  let text = "";
 		  let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.=";
 
@@ -443,7 +440,7 @@ const SignUp = props => {
 			  text += possible.charAt(Math.floor(Math.random() * possible.length));
 
       return text;
-	 }
+	 } */
 
   const handleSignUp = () => {
 
@@ -632,7 +629,6 @@ const SignUp = props => {
                             name="fullname"
                             type="text"
                             onChange={handleChange}
-                            disabled={socialLoading}
                             InputProps={{
                               disableUnderline: true,
                               style: {fontSize: 12}
@@ -655,7 +651,6 @@ const SignUp = props => {
                               name="username"
                               type="text"
                               onChange={handleChange}
-                              disabled={socialLoading}
                               InputProps={{
                                 disableUnderline: true,
                                 style: {fontSize: 12}
@@ -689,7 +684,6 @@ const SignUp = props => {
                             }}
                             name="password"
                             onChange={handleChange}
-                            disabled={socialLoading}
                             type={showPassword ? "text" : "password"}
                             aria-describedby="password-error"
                             />

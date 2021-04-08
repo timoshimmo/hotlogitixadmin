@@ -3,18 +3,10 @@ import { NavLink as RouterLink, useHistory, useLocation } from 'react-router-dom
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { List, ListItem, Button, colors, ListItemIcon, ListItemText, Divider } from '@material-ui/core';
+import { List, ListItem, Button, ListItemIcon, ListItemText } from '@material-ui/core';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import Popover from '@material-ui/core/Popover';
-import LocalOfferOutlinedIcon from '@material-ui/icons/LocalOfferOutlined';
-import FormatListBulletedOutlinedIcon from '@material-ui/icons/FormatListBulletedOutlined';
-import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
-import HeadsetMicOutlinedIcon from '@material-ui/icons/HeadsetMicOutlined';
 import ExitToAppOutlinedIcon from '@material-ui/icons/ExitToAppOutlined';
-import LiveHelpOutlinedIcon from '@material-ui/icons/LiveHelpOutlined';
-import PolicyOutlinedIcon from '@material-ui/icons/PolicyOutlined';
-import SecurityIcon from '@material-ui/icons/Security';
-import AssignmentOutlinedIcon from '@material-ui/icons/AssignmentOutlined';
 
 
 const useStyles = makeStyles(theme => ({
@@ -63,10 +55,7 @@ const useStyles = makeStyles(theme => ({
       fontSize: 14,
       fontWeight: 600,
       color: '#04011D',
-  },
-  listroot: {
-    flexGrow: 1
-  },
+  }
 }));
 
 

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { loadCSS } from 'fg-loadcss';
-import clsx from 'clsx';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
@@ -26,7 +25,6 @@ import { green } from '@material-ui/core/colors';
 import MuiAlert from '@material-ui/lab/Alert';
 import Collapse from '@material-ui/core/Collapse';
 import CloseIcon from '@material-ui/icons/Close';
-import Icon from '@material-ui/core/Icon';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
@@ -468,7 +466,6 @@ const SignIn = props => {
   const [open, setOpen] = React.useState(false);
   const [serverError, setServerError] = React.useState(null);
   const [showPassword, setShowPassword] = React.useState(false);
-  const [iconSize, setIconSize] = React.useState(0);
   const [value, setValue] = React.useState(0);
   const [openForgot, setOpenForgot] = React.useState(false);
   const [forgotLoading, setForgotLoading] = React.useState(false);
@@ -476,28 +473,12 @@ const SignIn = props => {
   const [forgottenError, setForgottenError] = React.useState(null);
   const theme = useTheme();
 
-  const isMobile = useMediaQuery(theme.breakpoints.down('xs'), {
-    defaultMatches: true
-  });
-
-//formState.values.remember_me || false
-  const matchesSmallMobile = useMediaQuery('(max-width:375px)');
-//  provider.addScope('openid');
 
   useEffect(() => {
 
     if (typeof localStorage !== 'undefined') {
       localStorage.removeItem('stansAdmin');
       localStorage.removeItem('stansonlyadmin');
-    }
-
-    //console.log("Screen Size: " + matchesSmallMobile);
-
-    if(matchesSmallMobile) {
-      setIconSize(14);
-    }
-    else {
-      setIconSize(20);
     }
 
     loadCSS(
@@ -553,11 +534,14 @@ const SignIn = props => {
         [event.target.name]: true
       }
     }));
-  };
+
+  /*};
 
   function handleChangeTab(event, newValue) {
     setValue(newValue);
   }
+
+  */
 
   const handleSignIn = event => {
       event.preventDefault();
@@ -646,23 +630,9 @@ const SignIn = props => {
 
   }
 
-  const handleRedirect = () => {
-    history.push('/signin');
-  }
-
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
-
-  const getReference = () => {
-      let text = "";
-      let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.=";
-
-      for( let i=0; i < 10; i++ )
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-      return text;
-   }
 
 
   const hasError = field =>
@@ -789,7 +759,6 @@ const SignIn = props => {
                                 fullWidth
                                 name="username"
                                 type="text"
-                                disabled={socialLoading}
                                 onChange={handleChange}
                                 InputProps={{
                                   disableUnderline: true,
@@ -824,7 +793,6 @@ const SignIn = props => {
                                 }}
                                 name="password"
                                 onChange={handleChange}
-                                disabled={socialLoading}
                                 type={showPassword ? "text" : "password"}
                                 aria-describedby="password-error"
                                 />
@@ -842,7 +810,7 @@ const SignIn = props => {
                               type="submit"
                               variant="contained"
                               onClick={handleSignIn}
-                              disabled={ loading || socialLoading }
+                              disabled={ loading }
                             >
                               Sign In
                               {loading && <CircularProgress size={28} className={classes.buttonProgress} />}

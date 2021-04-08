@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { Link as RouterLink, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { TextField, Grid, Typography, Toolbar, Badge, IconButton, InputAdornment } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
-import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
+import { Grid, Typography, Toolbar } from '@material-ui/core';
 //import { history } from '../../../helpers';
 import SvgIcon from '@material-ui/core/SvgIcon';
 
@@ -52,45 +49,7 @@ const useStyles = makeStyles(theme => ({
 
   }));
 
-  function SearchIcon(props) {
-      return (
-          <SvgIcon {...props} viewBox="0 0 22.052 22.052">
-              <g transform="translate(0.85 0.85)">
-                  <path class="a" d="M25.278,16.389A8.889,8.889,0,1,1,16.389,7.5,8.889,8.889,0,0,1,25.278,16.389Z" transform="translate(-7.5 -7.5)"/>
-                  <path class="a" d="M46.458,46.458l-4.833-4.833" transform="translate(-26.458 -26.458)"/>
-              </g>
-          </SvgIcon>
-      );
-  }
 
-  /*
-  <Grid
-    item
-    className={classes.leftCol}
-  >
-
-  <RouterLink to="/">
-    <img
-      alt="Logo"
-      src="/images/logo_only.png"
-      height="35"
-      width="45"
-    />
-  </RouterLink>
-
-  </Grid>
-
-  <AppBar
-    {...rest}
-    className={clsx(classes.root, className)}
-    elevation={0}
-    style={{ color: '#2688FB', backgroundColor: 'white' }}
-  >
-    const logout = () => {
-      history.push('/signin');
-    }
-
-  */
 
 
   const Topbar = props => {
@@ -99,12 +58,6 @@ const useStyles = makeStyles(theme => ({
 
     const { title } = props;
     let history = useHistory();
-
-    const [notifications] = useState([]);
-
-    const handleSearch = () => {
-      history.push('/search');
-    }
 
 
     return (

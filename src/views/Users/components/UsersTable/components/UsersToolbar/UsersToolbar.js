@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
 
 import { SearchInput } from '../../../../components';
 
@@ -27,13 +26,6 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1)
   }
 }));
-
-
-/*
-<Button className={classes.importButton}>Import</Button>
-<Button className={classes.exportButton}>Export</Button>
-
-*/
 
 const UsersToolbar = props => {
   const { className, handleSearchChange, ...rest } = props;

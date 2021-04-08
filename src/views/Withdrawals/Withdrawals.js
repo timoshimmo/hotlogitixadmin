@@ -1,43 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Typography,
-  Paper,
-  Grid,
-  Fab,
   useMediaQuery,
   useTheme,
-  GridList,
-  Divider,
-  InputBase,
-  IconButton,
-  Button,
-  Dialog,
-  Card,
-  CardHeader,
-  CardMedia,
-  CardContent,
-  CardActionArea,
   Hidden,
   Icon
 } from '@material-ui/core';
-//import ComponentSlider from "@kapost/react-component-slider";
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
-import SettingsInputAntennaOutlinedIcon from '@material-ui/icons/SettingsInputAntennaOutlined';
-import Avatar from '@material-ui/core/Avatar';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import SvgIcon from '@material-ui/core/SvgIcon';
-import CloseIcon from '@material-ui/icons/Close';
-import { Topbar, MobileTopbar } from '../components';
+import { Topbar } from '../components';
 import SERVICES from '../../util/webservices';
 import { history } from '../../helpers';
 import { UsersTable } from './components';
@@ -47,28 +19,6 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-function ImageIcon(props) {
-  return (
-    <SvgIcon {...props} width="22.173" height="22.173" viewBox="0 0 22.173 22.173">
-      <g transform="translate(-6.6 -6.6)">
-        <path d="M9.722,7.5H25.278A2.222,2.222,0,0,1,27.5,9.722V25.278A2.222,2.222,0,0,1,25.278,27.5H9.722A2.222,2.222,0,0,1,7.5,25.278V9.722A2.222,2.222,0,0,1,9.722,7.5Z" transform="translate(0 0)"/>
-        <path d="M20.833,19.167A1.667,1.667,0,1,1,19.167,17.5,1.667,1.667,0,0,1,20.833,19.167Z" transform="translate(-5.556 -5.556)"/>
-        <path d="M30.278,30.556,24.722,25,12.5,37.222" transform="translate(-2.778 -9.722)"/>
-      </g>
-    </SvgIcon>
-  );
-}
-
-function VideoIcon(props) {
-  return (
-    <SvgIcon {...props} viewBox="0 0 33.229 21.8">
-      <g transform="translate(-1.6 -11.6)">
-        <path d="M50,17.5,40,24.643l10,7.143Z" transform="translate(-16.071 -2.143)"/>
-        <path d="M5.357,12.5H21.071a2.857,2.857,0,0,1,2.857,2.857V29.643A2.857,2.857,0,0,1,21.071,32.5H5.357A2.857,2.857,0,0,1,2.5,29.643V15.357A2.857,2.857,0,0,1,5.357,12.5Z" transform="translate(0 0)"/>
-      </g>
-    </SvgIcon>
-  );
-}
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -271,54 +221,13 @@ commentsBody: {
 const Withdrawals = () => {
   const classes = useStyles();
 
-  const theme = useTheme();
-  const getSize = useMediaQuery(theme.breakpoints.up('md'));
+//  const theme = useTheme();
 
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'), {
-    defaultMatches: true
-  });
-
-  const [postLoading, setPostLoading] = useState(false);
-  const [serverError, setServerError] = useState(null);
   const [success, setSuccess] = useState(false);
   const [failed, setFailed] = useState(false);
-  const [open, setOpen] = useState(false);
   const [usersList, setUsersList] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [loading, setLoading] = React.useState(false);
-
-  const [profilePic, setProfilePic] = useState(null);
-
-  /*  beamsClient.start()
-    .then(() => beamsClient.addDeviceInterest('hello'))
-    .then(() => console.log('Successfully registered and subscribed!'))
-    .catch(e => console.error('Could not get device interest', e)); */
-
-
-/*  const renderLeftArrow = () => getSize ? <Fab color="primary" aria-label="Previous"><ArrowLeftIcon /></Fab> :
-<Fab size="small" color="primary" aria-label="Previous"><ArrowLeftIcon /></Fab>;
-const renderRightArrow = () => getSize ? <Fab color="primary" aria-label="Next"><ArrowRightIcon /></Fab> :
-<Fab size="small" color="primary" aria-label="Next"><ArrowRightIcon /></Fab>; */
-
-
-  let userData = {};
-  if (typeof localStorage !== 'undefined') {
-      const user = localStorage.getItem('user');
-      if(user !== null) {
-        const data = JSON.parse(user);
-        userData = data;
-      }
-  }
-
-/*  BeamsClient.getUserId()
-  .then(userId => {
-    // Check if the Beams user matches the user that is currently logged in
-    if (userId !== userData.userid) {
-        // Unregister for notifications
-        return BeamsClient.stop();
-    }
-  })
-  .catch(console.error); */
 
   useEffect(() => {
 
@@ -357,13 +266,6 @@ const renderRightArrow = () => getSize ? <Fab color="primary" aria-label="Next">
     console.log(newList);
     setFilteredUsers(newList);
   }
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const handleSuccess = (event, reason) => {
   if (reason === 'clickaway') {
