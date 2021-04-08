@@ -4,3 +4,4 @@ export { default as Users } from './Users';
 export { default as Withdrawals } from './Withdrawals';
 export { default as Transactions } from './Transactions';
 export { default as ReportedCases } from './ReportedCases';
+export { default as Admins } from './Admins';

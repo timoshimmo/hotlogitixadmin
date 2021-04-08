@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { loadCSS } from 'fg-loadcss';
-import { Link as RouterLink, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
 import { makeStyles } from '@material-ui/core/styles';
@@ -10,7 +10,6 @@ import {
   Button,
   IconButton,
   TextField,
-  Link,
   FormHelperText,
   Typography,
   Paper,
@@ -25,7 +24,7 @@ import Collapse from '@material-ui/core/Collapse';
 import CloseIcon from '@material-ui/icons/Close';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
-
+//Link as RouterLink, Link,
 //const clientId = '631148650233-8jnn4i4t1ttk4ohuq8t4207en3rk6fju.apps.googleusercontent.com';
 
 const schema = {
@@ -440,6 +439,111 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+/*
+
+<TabContainer value={value} index={1}>
+  <div className={classes.content}>
+    <div className={classes.forgotBody}>
+    <form className={classes.form}>
+      <Typography
+        variant="h5"
+        display="block"
+        gutterBottom
+        align="center"
+        className={classes.titleTextStyle}
+      >
+        Forgot Password?
+      </Typography>
+      <Typography
+        variant="body2"
+        display="block"
+        className={classes.subtitleSpacing}
+        align="center"
+      >
+        Enter your username below to receive instructions to reset your password
+      </Typography>
+      <Collapse in={openForgot}>
+        <MuiAlert
+          severity="error"
+          action={
+             <IconButton
+               aria-label="close"
+               color="inherit"
+               size="small"
+               onClick={() => {
+                 setOpenForgot(false);
+               }}
+             >
+               <CloseIcon fontSize="inherit" />
+             </IconButton>
+           }
+          >
+          {forgottenError}
+       </MuiAlert>
+    </Collapse>
+    <Collapse in={successOpen}>
+        <MuiAlert
+          severity="success"
+          >
+        Your password has been successfully updated. Sign in to continue
+        </MuiAlert>
+        <div className={classes.backArea}>
+          <Button onClick={() => setValue(0)} color="primary" className={classes.btnForgot} classes= {{ text: classes.btnForgotTextPadding }}>Back to Sign In</Button>
+        </div>
+  </Collapse>
+    <Collapse in={!successOpen}>
+      <InputLabel shrink htmlFor="forgotUsername">
+        Username
+      </InputLabel>
+      <FormControl error={forgotError('forgotUsername')} className={classes.formComponent}>
+        <TextField
+          id="forgot-input"
+          className={classes.textField}
+          fullWidth
+          name="forgotUsername"
+          onChange={handleForgotChange}
+          type="text"
+          InputProps={{
+            disableUnderline: true,
+            style: {fontSize: 12}
+          }}
+          aria-describedby="forgot-error"
+        />
+
+        <FormHelperText id="forgot-error" classes={{ error: classes.helper }}>
+          {  forgotError('forgotUsername') ? forgotForm.errors.forgotUsername[0] : null }
+        </FormHelperText>
+      </FormControl>
+      <Button
+        className={classes.signUpButton}
+        disabled={ forgotLoading}
+        fullWidth
+        size="large"
+        onClick={ handleforgotUsername }
+        variant="contained"
+      >
+        Send
+        {forgotLoading && <CircularProgress size={28} className={classes.buttonProgress} />}
+      </Button>
+      <div className={classes.noAcctArea}>
+        <Typography
+          color="textSecondary"
+          variant="body2"
+          className={classes.rememberForgot}
+        >
+          Remember?{' '}
+          <Button onClick={() => setValue(0)} className={classes.btnForgot} classes= {{ text: classes.btnForgotTextPadding, root: classes.btnBackRoot }}>Go Back</Button>
+        </Typography>
+      </div>
+    </Collapse>
+    </form>
+    </div>
+  </div>
+</TabContainer>
+
+
+*/
+
 const SignIn = props => {
   const { history } = props;
 
@@ -463,11 +567,11 @@ const SignIn = props => {
   const [open, setOpen] = React.useState(false);
   const [serverError, setServerError] = React.useState(null);
   const [showPassword, setShowPassword] = React.useState(false);
-  const [value, setValue] = React.useState(0);
-  const [openForgot, setOpenForgot] = React.useState(false);
-  const [forgotLoading, setForgotLoading] = React.useState(false);
-  const [successOpen, setSuccessOpen] = React.useState(false);
-  const [forgottenError, setForgottenError] = React.useState(null);
+//  const [value, setValue] = React.useState(0);
+//  const [openForgot, setOpenForgot] = React.useState(false);
+//  const [forgotLoading, setForgotLoading] = React.useState(false);
+//  const [successOpen, setSuccessOpen] = React.useState(false);
+//  const [forgottenError, setForgottenError] = React.useState(null);
 //  const theme = useTheme();
 
 
@@ -518,7 +622,7 @@ const SignIn = props => {
     }));
   };
 
-  const handleForgotChange = event => {
+/*  const handleForgotChange = event => {
     event.persist();
     setForgotForm(forgotForm => ({
       ...forgotForm,
@@ -532,13 +636,37 @@ const SignIn = props => {
       }
     }));
 
-  }
+  } */
 
   /*};
 
   function handleChangeTab(event, newValue) {
     setValue(newValue);
   }
+
+  <Typography
+    color="textSecondary"
+    variant="body2"
+    className={classes.already}
+  >
+    Already have an account?{' '}
+    <Link
+      component={RouterLink}
+      to="/signup"
+      variant="h6"
+      className={classes.redirectLink}
+
+    >
+      Sign up
+    </Link>
+  </Typography>
+
+  <div className={classes.forgotArea}>
+    <Button onClick={() => setValue(1)} color="primary" className={classes.btnForgot} classes= {{ text: classes.btnForgotTextPadding }}>Forgot password?</Button>
+  </div>
+
+
+    <TabContainer value={value} index={0}>
 
   */
 
@@ -558,8 +686,9 @@ const SignIn = props => {
         .then(response => {
           const res = response.data;
           if (res.status === 'success') {
+            console.log(JSON.stringify(res.data));
             localStorage.setItem('stansonlyadmin', res.data.token);
-            localStorage.setItem('stansAdmin', JSON.stringify({ username: res.data.username, userid: res.data.id }));
+            localStorage.setItem('stansAdmin', JSON.stringify({ username: res.data.username, userid: res.data.id, role: res.data.role }));
             axios.defaults.headers.common['x-access-token'] = res.data.token;
             console.log(res);
             console.log(res.data.token);
@@ -587,7 +716,7 @@ const SignIn = props => {
 
   }
 
-  const handleforgotUsername = event => {
+/*  const handleforgotUsername = event => {
 
     event.preventDefault();
 
@@ -607,14 +736,14 @@ const SignIn = props => {
           setSuccessOpen(true);
           setOpenForgot(false);
           console.log(res);
-        /*  if (res.status === 'success') {
+          if (res.status === 'success') {
             localStorage.setItem('user', JSON.stringify({ email: res.data.email, id: res.data._id, firstName: res.data.firstName, lastName: res.data.lastName }));
             localStorage.setItem('westpaytoken', res.data.token);
             history.push('/dashboard');
           }
           else {
             console.log(response.error);
-          } */
+          }
         })
         .catch(error => {
           setForgotLoading(false);
@@ -627,7 +756,7 @@ const SignIn = props => {
 
     }
 
-  }
+  } */
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -637,9 +766,9 @@ const SignIn = props => {
   const hasError = field =>
     formState.touched[field] && formState.errors[field] ? true : false;
 
-  const forgotError = field =>
+/*  const forgotError = field =>
     forgotForm.touched[field] && forgotForm.errors[field] ? true : false;
-
+*/
     return (
 
       <div className={classes.root}>
@@ -697,7 +826,7 @@ const SignIn = props => {
               </div>
               <div className={classes.contentBody}>
                 <Paper className={classes.formPaper} elevation={1}>
-                  <TabContainer value={value} index={0}>
+
                     <div className={classes.formBody}>
                       <Typography
                         variant="h5"
@@ -799,9 +928,6 @@ const SignIn = props => {
                                   {  hasError('password') ? formState.errors.password[0] : null }
                                 </FormHelperText>
                             </FormControl>
-                            <div className={classes.forgotArea}>
-                              <Button onClick={() => setValue(1)} color="primary" className={classes.btnForgot} classes= {{ text: classes.btnForgotTextPadding }}>Forgot password?</Button>
-                            </div>
                             <Button
                               className={classes.signUpButton}
                               fullWidth
@@ -814,124 +940,8 @@ const SignIn = props => {
                               Sign In
                               {loading && <CircularProgress size={28} className={classes.buttonProgress} />}
                             </Button>
-                          <Typography
-                            color="textSecondary"
-                            variant="body2"
-                            className={classes.already}
-                          >
-                            Already have an account?{' '}
-                            <Link
-                              component={RouterLink}
-                              to="/signup"
-                              variant="h6"
-                              className={classes.redirectLink}
-
-                            >
-                              Sign up
-                            </Link>
-                          </Typography>
                         </form>
                     </div>
-                  </TabContainer>
-                  <TabContainer value={value} index={1}>
-                    <div className={classes.content}>
-                      <div className={classes.forgotBody}>
-                      <form className={classes.form}>
-                        <Typography
-                          variant="h5"
-                          display="block"
-                          gutterBottom
-                          align="center"
-                          className={classes.titleTextStyle}
-                        >
-                          Forgot Password?
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          display="block"
-                          className={classes.subtitleSpacing}
-                          align="center"
-                        >
-                          Enter your username below to receive instructions to reset your password
-                        </Typography>
-                        <Collapse in={openForgot}>
-                          <MuiAlert
-                            severity="error"
-                            action={
-                               <IconButton
-                                 aria-label="close"
-                                 color="inherit"
-                                 size="small"
-                                 onClick={() => {
-                                   setOpenForgot(false);
-                                 }}
-                               >
-                                 <CloseIcon fontSize="inherit" />
-                               </IconButton>
-                             }
-                            >
-                            {forgottenError}
-                         </MuiAlert>
-                      </Collapse>
-                      <Collapse in={successOpen}>
-                          <MuiAlert
-                            severity="success"
-                            >
-                          Your password has been successfully updated. Sign in to continue
-                          </MuiAlert>
-                          <div className={classes.backArea}>
-                            <Button onClick={() => setValue(0)} color="primary" className={classes.btnForgot} classes= {{ text: classes.btnForgotTextPadding }}>Back to Sign In</Button>
-                          </div>
-                    </Collapse>
-                      <Collapse in={!successOpen}>
-                        <InputLabel shrink htmlFor="forgotUsername">
-                          Username
-                        </InputLabel>
-                        <FormControl error={forgotError('forgotUsername')} className={classes.formComponent}>
-                          <TextField
-                            id="forgot-input"
-                            className={classes.textField}
-                            fullWidth
-                            name="forgotUsername"
-                            onChange={handleForgotChange}
-                            type="text"
-                            InputProps={{
-                              disableUnderline: true,
-                              style: {fontSize: 12}
-                            }}
-                            aria-describedby="forgot-error"
-                          />
-
-                          <FormHelperText id="forgot-error" classes={{ error: classes.helper }}>
-                            {  forgotError('forgotUsername') ? forgotForm.errors.forgotUsername[0] : null }
-                          </FormHelperText>
-                        </FormControl>
-                        <Button
-                          className={classes.signUpButton}
-                          disabled={ forgotLoading}
-                          fullWidth
-                          size="large"
-                          onClick={ handleforgotUsername }
-                          variant="contained"
-                        >
-                          Send
-                          {forgotLoading && <CircularProgress size={28} className={classes.buttonProgress} />}
-                        </Button>
-                        <div className={classes.noAcctArea}>
-                          <Typography
-                            color="textSecondary"
-                            variant="body2"
-                            className={classes.rememberForgot}
-                          >
-                            Remember?{' '}
-                            <Button onClick={() => setValue(0)} className={classes.btnForgot} classes= {{ text: classes.btnForgotTextPadding, root: classes.btnBackRoot }}>Go Back</Button>
-                          </Typography>
-                        </div>
-                      </Collapse>
-                      </form>
-                      </div>
-                    </div>
-                  </TabContainer>
                 </Paper>
               </div>
             </div>

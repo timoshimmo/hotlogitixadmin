@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
-import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { makeStyles } from '@material-ui/core/styles';
-import { useHistory } from 'react-router-dom';
 import validate from 'validate.js';
 import {
   Card,
@@ -20,7 +18,6 @@ import {
   InputLabel,
   FormHelperText,
   InputAdornment,
-  Avatar,
   IconButton,
   Typography,
   Button,
@@ -28,13 +25,13 @@ import {
   Grid
 } from '@material-ui/core';
 import { TableToolbar, TableHeader, UsersToolbar } from './components';
-import NumberFormat from 'react-number-format';
 import SERVICES from '../../../../util/webservices';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import axios from 'axios';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -67,6 +64,28 @@ function Alert(props) {
 }
 
 const schema = {
+  fullname: {
+    presence: { allowEmpty: false, message: 'is required' },
+    length: {
+      minimum: 5,
+      maximum: 100
+    },
+    format: {
+     pattern: /^[a-zA-Z ]+$/,
+     message: 'should only contain letters'
+   }
+  },
+  username: {
+    presence: { allowEmpty: false, message: 'is required' },
+    length: {
+      minimum: 6,
+      maximum: 20
+    },
+    format: {
+     pattern: /^[a-zA-Z0-9_]+$/,
+     message: 'should only contain letters, numbers and underscore'
+   }
+  },
   newPassword: {
     presence: { allowEmpty: false, message: 'is required' },
     length: {
@@ -85,6 +104,35 @@ const schema = {
     equality: "newPassword"
   }
 
+};
+
+const addschema = {
+  fullname: {
+    presence: { allowEmpty: false, message: 'is required' },
+    length: {
+      minimum: 5,
+      maximum: 100
+    },
+    format: {
+     pattern: /^[a-zA-Z ]+$/,
+     message: 'should only contain letters'
+   }
+  },
+  username: {
+    presence: { allowEmpty: false, message: 'is required' },
+    length: {
+      minimum: 6,
+      maximum: 20
+    }
+  },
+  password: {
+    presence: { allowEmpty: false, message: 'is required' },
+    length: {
+      minimum: 6,
+      maximum: 15,
+      message: 'must be at least 6 characters'
+    }
+  }
 };
 
 const useStyles = makeStyles(theme => ({
@@ -128,7 +176,6 @@ const useStyles = makeStyles(theme => ({
   },
   formRoot:{
    maxHeight: '100%',
-   maxWidth: '100%',
    width: 450
  },
  form: {
@@ -182,8 +229,7 @@ textArea: {
 },
 focused: {},
 helper: {
-  fontSize: 11,
-  color: 'red'
+  fontSize: 11
 },
 formArea: {
   display: 'flex',
@@ -297,30 +343,47 @@ unSubscribeButtonStyle: {
      color: "#fff",
    },
 },
-
-permitStyle: {
-  textTransform: 'none',
-  borderStyle: 'solid',
-  borderRadius: 70,
-  borderWidth: 1,
-  fontSize: 14,
-  fontWeight: 400,
-  font: 'Helvetica Neue',
-  WebkitBoxShadow: 'none',
-  MozBoxShadow: 'none',
-  boxShadow: 'none',
-  backgroundColor: '#4caf50',
-  borderColor: '#fff',
-  color: '#fff',
-  '&:hover': {
-     WebkitBoxShadow: 'none',
-     MozBoxShadow: 'none',
-     boxShadow: 'none',
-     backgroundColor: '#388e3c',
-     color: "#fff",
-   },
-},
 }));
+
+/*
+<Grid container justify="flex-right" spacing={3}>
+  <Grid
+    item
+    lg={3}
+    style={{ paddingLeft: 25, paddingRight: 25 }}
+    >
+    <Button
+      type="button"
+       variant="contained"
+      className={classes.unSubscribeButtonStyle}
+      disabled={suspendLoading}
+      onClick={handleTerminate}
+      >
+      Terminate
+      {suspendLoading && <CircularProgress size={18} className={classes.buttonSaveProgress} />}
+    </Button>
+
+  </Grid>
+   <Grid
+     item
+     lg={3}
+     style={{ paddingLeft: 25, paddingRight: 25, paddingBottom: 30 }}
+     >
+     <Button
+       type="button"
+        variant="contained"
+       className={classes.buttonStyle}
+       disabled={suspendLoading}
+       onClick={handleSuspend}
+       >
+       Suspend
+       {suspendLoading && <CircularProgress size={18} className={classes.buttonSaveProgress} />}
+     </Button>
+
+   </Grid>
+ </Grid>
+
+*/
 
 
 const UsersTable = props => {
@@ -328,27 +391,18 @@ const UsersTable = props => {
   const { className, usersList, handleFilter, ...rest } = props;
 
   const classes = useStyles();
-  let history = useHistory();
 
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('fullname');
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('fullname');
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [page, setPage] = useState(0);
-  const [suspendLoading, setSuspendLoading] = useState(false);
-  const [terminateLoading, setTerminateLoading] = useState(false);
-  const [permitLoading, setPermitLoading] = useState(false);
-
+//  const [suspendLoading, setSuspendLoading] = useState(false);
   const [toggleDrawer, setToggleDrawer] = useState();
-  const [loading, setLoading] = useState(false);
-  const [profilePic, setProfilePic] = useState(null);
-  const [resFullname, setFullname] = useState('');
-  const [resEmail, setEmail] = useState('');
-  const [resLocation, setLocation] = useState('');
-  const [subscribePrice, setSubscribePrice] = useState('');
-  const [resPhoneNo, setPhoneNo] = useState('');
-  const [userID, setUserID] = useState('');
-  const [isSuspended, setIsSuspended] = useState(false);
 
+  const [toggleCreateDrawer, setToggleCreateDrawer] = useState();
+  const [loading, setLoading] = useState(false);
+  const [updateLoading, setUpdateLoading] = useState(false);
+  const [userID, setUserID] = useState('');
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -356,6 +410,8 @@ const UsersTable = props => {
   const [success, setSuccess] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
   const [failed, setFailed] = useState(false);
+  const [addLoading, setAddLoading] = useState(false);
+  const [showPassword, setShowPassword] = React.useState(false);
 
   const [formState, setFormState] = useState({
     isValid: false,
@@ -364,8 +420,16 @@ const UsersTable = props => {
     errors: {}
   });
 
+  const [addFormState, setAddFormState] = useState({
+    isValid: false,
+    values: {},
+    touched: {},
+    errors: {}
+  });
+
   useEffect(() => {
     const errors = validate(formState.values, schema);
+    const addErrors = validate(addFormState.values, addschema);
 
     setFormState(formState => ({
       ...formState,
@@ -373,7 +437,13 @@ const UsersTable = props => {
       errors: errors || {}
     }));
 
-}, [formState.values]);
+    setAddFormState(addFormState => ({
+      ...addFormState,
+      isValid: addErrors ? false : true,
+      errors: addErrors || {}
+    }));
+
+}, [formState.values, addFormState.values]);
 
 
   const handleRequestSort = (event, property) => {
@@ -392,14 +462,23 @@ const UsersTable = props => {
       // let textsDatas = originalData.filter(textsData => textsData.postType === "text");
       console.log("SELECTED:" + JSON.stringify(selectedData));
     //  setSelectedList(selectedData);
+    setFormState(formState => ({
+      ...formState,
+      values: {
+          ...formState.values,
+          fullname: selectedData[0].fullname,
+          username: selectedData[0].username
+      }
+    }));
       setUserID(id);
-      setProfilePic(selectedData[0].profilePicUrl);
-      setFullname(selectedData[0].fullname);
-      setLocation(selectedData[0].location);
-      setEmail(selectedData[0].email);
-      setPhoneNo(selectedData[0].mobileNumber);
-      setSubscribePrice(selectedData[0].subscribePrice);
-      setIsSuspended(selectedData[0].isSuspended);
+  }
+
+  const handleCloseCreateDrawer = () => {
+    setToggleCreateDrawer(false);
+  }
+
+  const handlOpenCreateDrawer = id => {
+      setToggleCreateDrawer(true);
 
   }
 
@@ -420,12 +499,33 @@ const UsersTable = props => {
 
 };
 
+const handleAddChange = event => {
+  event.persist();
+
+  setAddFormState(addFormState => ({
+    ...addFormState,
+    values: {
+      ...addFormState.values,
+      [event.target.name]: event.target.value
+    },
+    touched: {
+      ...addFormState.touched,
+      [event.target.name]: true
+    }
+  }));
+
+};
+
 const handleClickShowNewPassword = () => {
   setShowNewPassword(!showNewPassword);
 };
 
 const handleClickShowConfirmPassword = () => {
   setShowConfirmPassword(!showConfirmPassword);
+};
+
+const handleClickShowPassword = () => {
+  setShowPassword(!showPassword);
 };
 
   const handlePageChange = (event, page) => {
@@ -447,19 +547,18 @@ const handleClickShowConfirmPassword = () => {
   setLoading(true);
 
   const obj = {
-     userid: userID,
-     newpassword: formState.values.newpassword,
+     adminid: userID,
+     newpassword: formState.values.newPassword,
   };
 
-  SERVICES.post('user/admin/updatePassword', obj)
+  SERVICES.post('admin/update/password', obj)
   .then(response => {
       const res = response.data;
       console.log(res);
       setLoading(false);
-      setToggleDrawer(false);
       setSuccessMsg('Password updated successfully');
       setSuccess(true);
-
+      setToggleDrawer(false);
 
   })
 .catch(error => {
@@ -472,123 +571,145 @@ const handleClickShowConfirmPassword = () => {
 
 }
 
-  const handleSuspend = () => {
+const handleUpdateAdmin = event => {
+  event.preventDefault();
+
+  setUpdateLoading(true);
+
+  const obj = {
+     adminid: userID,
+     fullname: formState.values.fullname,
+     username: formState.values.username,
+  };
+
+  SERVICES.post('admin/update/admin', obj)
+  .then(response => {
+      const res = response.data;
+      console.log(res);
+      setUpdateLoading(false);
+      setSuccessMsg('Admin info updated successfully');
+      setSuccess(true);
+      setToggleDrawer(false);
+      window.location.reload(true);
+
+  })
+  .catch(error => {
+    setUpdateLoading(false);
+    const resError = error.response ? error.response.data.message : "Something went wrong please try again";
+    console.log(resError);
+    setServerError(resError);
+    setFailed(true);
+  })
+
+}
+
+const handleSignUp = () => {
+
+  if(!addLoading) {
+    setAddLoading(true);
+
+    const obj = {
+        fullname: addFormState.values.fullname,
+        username: addFormState.values.username,
+        password: addFormState.values.password,
+    };
+
+    axios.post('https://api.stansonly.com/admin/register', obj)
+    .then(response => {
+      setAddLoading(false);
+      const res = response.data;
+      console.log(res);
+      if(res.status === "success") {
+        setSuccessMsg('New admin created');
+        setSuccess(true);
+        setToggleCreateDrawer(false);
+        window.location.reload(true);
+      //  history.push('/signin');
+      }
+    })
+    .catch(function (error) {
+      console.log(error.response);
+      setAddLoading(false);
+      const resError = error.response ? error.response.data.message : "Something went wrong please try again";
+      setServerError(resError);
+      setFailed(true);
+    })
+  }
+}
+
+const handleSuccess = (event, reason) => {
+  if (reason === 'clickaway') {
+    return;
+  }
+
+  setSuccess(false);
+};
+
+const handleFailed = (event, reason) => {
+  if (reason === 'clickaway') {
+    return;
+  }
+
+  setFailed(false);
+};
+
+/*  const handleSuspend = () => {
     if(!suspendLoading) {
       setSuspendLoading(true);
 
-      const obj = {
-         userid: userID,
-      };
-
-      SERVICES.post(`user/suspend`, obj)
+      SERVICES.get(`user/suspend`)
       .then(response => {
            setSuspendLoading(false);
-           setToggleDrawer(false);
            setSuccessMsg('User is suspended');
-           setSuccess(true);
-           window.location.reload(true);
+           handleSuccess();
 
       })
       .catch(function (error) {
         setSuspendLoading(false);
-        console.log(errRes);
-        const errRes = error.response;
+        const errRes = error.response ? error.response.data.message : "Something went wrong please try again";
         if(errRes.status === 401 && errRes.data.message === 'You dont have permission for this action') {
           localStorage.removeItem('stansAdmin');
           localStorage.removeItem('stansonlyadmin');
           history.push('/');
         }
+        console.log(errRes);
         setServerError(errRes);
-        setFailed(true);
-      })
-    }
-  }
-
-  const handlePermit = () => {
-    if(!permitLoading) {
-      setPermitLoading(true);
-
-      const obj = {
-         userid: userID,
-      };
-
-      SERVICES.post(`user/permit`, obj)
-      .then(response => {
-           setPermitLoading(false);
-           setToggleDrawer(false);
-           setSuccessMsg('User is suspended');
-           setSuccess(true);
-           window.location.reload(true);
-
-      })
-      .catch(function (error) {
-        setPermitLoading(false);
-        console.log(error);
-        const errRes = error.response;
-        if(errRes.status) {
-          if(errRes.status === 401 && errRes.data.message === 'You dont have permission for this action') {
-            localStorage.removeItem('stansAdmin');
-            localStorage.removeItem('stansonlyadmin');
-            history.push('/');
-          }
-        }
-        setServerError(errRes);
-        setFailed(true);
+        handleFailed();
       })
     }
   }
 
   const handleTerminate = () => {
-    if(!terminateLoading) {
-      setTerminateLoading(true);
+    if(!suspendLoading) {
+      setSuspendLoading(true);
 
-      const obj = {
-         userid: userID,
-      };
-
-      SERVICES.post(`user/terminate`, obj)
+      SERVICES.get(`user/terminate`)
       .then(response => {
-           setTerminateLoading(false);
-           setToggleDrawer(false);
+           setSuspendLoading(false);
            setSuccessMsg('User is terminated');
-           setSuccess(true);
+           handleSuccess();
 
       })
       .catch(function (error) {
-        setTerminateLoading(false);
-        console.log(error);
-        const errRes = error.response;
-        if(errRes.status) {
-          if(errRes.status === 401 && errRes.data.message === 'You dont have permission for this action') {
-            localStorage.removeItem('stansAdmin');
-            localStorage.removeItem('stansonlyadmin');
-            history.push('/');
-          }
+        setSuspendLoading(false);
+        const errRes = error.response ? error.response.data.message : "Something went wrong please try again";
+        if(errRes.status === 401 && errRes.data.message === 'You dont have permission for this action') {
+          localStorage.removeItem('stansAdmin');
+          localStorage.removeItem('stansonlyadmin');
+          history.push('/');
         }
+        console.log(errRes);
         setServerError(errRes);
-        setFailed(true);
+        handleFailed();
       })
     }
   }
-
-  const handleSuccess = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setSuccess(false);
-  };
-
-  const handleFailed = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setFailed(false);
-  };
-
+*/
   const hasError = field =>
     formState.touched[field] && formState.errors[field] ? true : false;
+
+    const hasAddError = field =>
+      addFormState.touched[field] && addFormState.errors[field] ? true : false;
 
   return (
 
@@ -600,7 +721,7 @@ const handleClickShowConfirmPassword = () => {
         <Card className={classes.cardRoot}>
           <CardContent className={classes.content}>
             <PerfectScrollbar>
-                <TableToolbar />
+                <TableToolbar handlOpenCreateDrawer={handlOpenCreateDrawer} />
                   <TableContainer>
                       <Table
                         className={classes.table}
@@ -629,19 +750,10 @@ const handleClickShowConfirmPassword = () => {
                                         {row.fullname}
                                       </TableCell>
                                       <TableCell>
-                                        {row.email}
+                                        {row.username}
                                       </TableCell>
                                       <TableCell>
-                                        {row.mobileNumber}
-                                      </TableCell>
-                                      <TableCell>
-                                        {row.location}
-                                      </TableCell>
-                                      <TableCell>
-                                        <NumberFormat value={row.subscribePrice} displayType={'text'} thousandSeparator={true} />
-                                      </TableCell>
-                                      <TableCell>
-                                        {moment(row.dateOfBirth).format('DD MMMM YYYY')}
+                                        {row.role < 1 ? 'Admin' : 'Super Admin'}
                                       </TableCell>
                                    </TableRow>
                                  );
@@ -664,170 +776,82 @@ const handleClickShowConfirmPassword = () => {
         </CardActions>
         </Card>
         <Drawer anchor="right" open={toggleDrawer} onClose={handleCloseDrawer}>
-            <div className={classes.formRoot} style={{ paddingBottom: 20, paddingTop: 20, paddingRight: 20}}>
-              <Grid container justify="flex-end" spacing={3}>
-                <Grid
-                  item
-                  lg={3}
-                  style={{ paddingLeft: 25, paddingRight: 25 }}
-                  >
-                  <Button
-                    type="button"
-                     variant="contained"
-                    className={classes.unSubscribeButtonStyle}
-                    disabled={terminateLoading}
-                    onClick={handleTerminate}
-                    >
-                    Terminate
-                    {terminateLoading && <CircularProgress size={18} className={classes.buttonSaveProgress} />}
-                  </Button>
+            <div className={classes.formRoot} style={{ paddingBottom: 20, paddingTop: 20}}>
 
-                </Grid>
-                 <Grid
-                   item
-                   lg={3}
-                   style={{ paddingLeft: 25, paddingRight: 25, paddingBottom: 30 }}
-                   >
-                     {
-                       isSuspended ?
-
-                       (
-                         <Button
-                           type="button"
-                            variant="contained"
-                           className={classes.permitStyle}
-                           disabled={permitLoading}
-                           onClick={handlePermit}
-                           >
-                           Permit
-                           {permitLoading && <CircularProgress size={18} className={classes.buttonSaveProgress} />}
-                         </Button>
-                       )
-                       :
-                       (
-                         <Button
-                           type="button"
-                            variant="contained"
-                           className={classes.buttonStyle}
-                           disabled={suspendLoading}
-                           onClick={handleSuspend}
-                           >
-                           Suspend
-                           {suspendLoading && <CircularProgress size={18} className={classes.buttonSaveProgress} />}
-                         </Button>
-                       )
-                     }
-                 </Grid>
-               </Grid>
               <form className={classes.form} autoComplete="off">
-                 <div className={classes.popTitle}>
-                     <Typography variant="h6">Profile Picture</Typography>
-                 </div>
-                 <div className={classes.imgArrangeStyle}>
-                     <Avatar alt="avatar" src={profilePic} className={classes.profileAvatar} />
-                 </div>
+                <div className={classes.popTitle}>
+                    <Typography variant="h6">Admin Details</Typography>
+                </div>
                 <div className={classes.formArea}>
                   <InputLabel shrink htmlFor="fullname">
                     Fullname
                   </InputLabel>
-                  <FormControl className={classes.formComponent}>
+                  <FormControl error={hasError('fullname')} className={classes.formComponent}>
                     <TextField
                         id="fullname-input"
                         className={classes.textField}
                         fullWidth
-                        disabled
                         name="fullname"
                         type="text"
-                        value={resFullname}
+                        onChange={handleChange}
+                        defaultValue={formState.values.fullname}
                         InputProps={{
                           disableUnderline: true,
                           style: {fontSize: 14}
                         }}
                         aria-describedby="fullname-error"
                       />
+                      <FormHelperText id="fullname-error" classes={{ error: classes.helper }}>
+                        {  hasError('fullname') ? formState.errors.fullname[0] : null }
+                      </FormHelperText>
                   </FormControl>
 
-                  <InputLabel shrink htmlFor="email">
-                    Email
+                  <InputLabel shrink htmlFor="username">
+                    Username
                   </InputLabel>
-                  <FormControl className={classes.formComponent}>
+                  <FormControl error={hasError('username')} className={classes.formComponent}>
                     <TextField
-                        id="email-input"
+                        id="username-input"
                         className={classes.textField}
                         fullWidth
-                        disabled
-                        name="email"
+                        name="username"
                         type="text"
-                        value={resEmail}
-                        InputProps={{
-                          disableUnderline: true,
-                          style: {fontSize: 14},
-                          maxLength: 160
-                        }}
-                        aria-describedby="email-error"
-                      />
-                  </FormControl>
-                  <InputLabel shrink htmlFor="weblink">
-                    Phone No.
-                  </InputLabel>
-                  <FormControl className={classes.formComponent}>
-                    <TextField
-                        id="phoneno-input"
-                        className={classes.textField}
-                        fullWidth
-                        disabled
-                        name="phoneno"
-                        type="text"
-                        value={resPhoneNo}
+                        onChange={handleChange}
+                        defaultValue={formState.values.username}
                         InputProps={{
                           disableUnderline: true,
                           style: {fontSize: 14}
                         }}
-                        aria-describedby="phoneno-error"
+                        aria-describedby="username-error"
                       />
+                      <FormHelperText id="username-error" classes={{ error: classes.helper }}>
+                        {  hasError('username') ? formState.errors.username[0] : null }
+                      </FormHelperText>
                   </FormControl>
+                </div>
+                <Grid container>
+                   <Grid
+                     item
+                     lg={12}
+                     style={{ textAlign: "right", paddingLeft: 25, paddingRight: 25, paddingTop: 10, paddingBottom: 30 }}
+                     >
+                     <Button
+                       variant="contained"
+                       className={classes.buttonStyle}
+                       disabled={ updateLoading || !formState.values.fullname || !formState.values.username }
+                       onClick={handleUpdateAdmin}
+                       >
+                       Save
+                       {updateLoading && <CircularProgress size={20} className={classes.buttonSaveProgress} />}
+                     </Button>
 
-                  <InputLabel shrink htmlFor="location">
-                    Location
-                  </InputLabel>
-                  <FormControl className={classes.formComponent}>
-                    <TextField
-                        id="location-input"
-                        className={classes.textField}
-                        fullWidth
-                        name="location"
-                        disabled
-                        type="text"
-                        value={resLocation}
-                        InputProps={{
-                          disableUnderline: true,
-                          style: {fontSize: 14}
-                        }}
-                        aria-describedby="location-error"
-                      />
-                  </FormControl>
-                  <InputLabel shrink htmlFor="dob">
-                    Subscription Price
-                  </InputLabel>
-                  <FormControl className={classes.formComponent}>
-                    <TextField
-                        id="subscribe-inline"
-                        className={classes.textField}
-                        fullWidth
-                        disabled
-                        name="subscribe"
-                        type="text"
-                        value={subscribePrice}
-                        InputProps={{
-                          disableUnderline: true,
-                          style: {fontSize: 14}
-                        }}
-                        aria-describedby="subscribe-error"
-                      />
-                  </FormControl>
+                   </Grid>
+                 </Grid>
+
+                 <div className={classes.formArea}>
 
                   <div className={classes.popTitle}>
-                      <Typography gutterBottom variant="h6">Change User Password</Typography>
+                      <Typography variant="h6">Change Admin Password</Typography>
                   </div>
                   <InputLabel shrink htmlFor="newPassword">
                     New Password
@@ -891,8 +915,6 @@ const handleClickShowConfirmPassword = () => {
                       </FormHelperText>
                   </FormControl>
                 </div>
-
-
               </form>
               <Grid container>
                  <Grid
@@ -913,6 +935,103 @@ const handleClickShowConfirmPassword = () => {
                  </Grid>
                </Grid>
             </div>
+        </Drawer>
+
+        <Drawer anchor="right" open={toggleCreateDrawer} onClose={handleCloseCreateDrawer}>
+          <div className={classes.formRoot} style={{ paddingBottom: 20, paddingTop: 20}}>
+            <form className={classes.form} autoComplete="off">
+              <div className={classes.popTitle}>
+                  <Typography variant="h6">Create Admin User</Typography>
+              </div>
+              <div className={classes.formArea}>
+                <InputLabel shrink htmlFor="fullname">
+                  Full name
+                </InputLabel>
+                <FormControl error={hasAddError('fullname')} className={classes.formComponent}>
+                  <TextField
+                      id="fullname-input"
+                      className={classes.textField}
+                      fullWidth
+                      name="fullname"
+                      type="text"
+                      onChange={handleAddChange}
+                      InputProps={{
+                        disableUnderline: true,
+                        style: {fontSize: 12}
+                      }}
+                      aria-describedby="fullname-error"
+                    />
+                    <FormHelperText id="fullname-error" classes={{ error: classes.helper }}>
+                      {  hasAddError('fullname') ? addFormState.errors.fullname[0] : null }
+                    </FormHelperText>
+                  </FormControl>
+
+                  <InputLabel shrink htmlFor="username">
+                    Username
+                  </InputLabel>
+                  <FormControl error={hasAddError('username')} className={classes.formComponent}>
+                    <TextField
+                        id="username-input"
+                        className={classes.textField}
+                        fullWidth
+                        name="username"
+                        type="text"
+                        onChange={handleAddChange}
+                        InputProps={{
+                          disableUnderline: true,
+                          style: {fontSize: 12}
+                        }}
+                        aria-describedby="username-error"
+                      />
+                      <FormHelperText id="username-error" classes={{ error: classes.helper }}>
+                        {  hasAddError('username') ? addFormState.errors.username[0] : null }
+                      </FormHelperText>
+                  </FormControl>
+                    <InputLabel shrink htmlFor="password">
+                      Password
+                    </InputLabel>
+                    <FormControl error={hasAddError('password')} className={classes.formComponent}>
+                    <TextField
+                      id="password-input"
+                      className={classes.textField}
+                      fullWidth
+                      InputProps={{
+                        endAdornment: <InputAdornment position="end">
+                        <IconButton
+                          size='small'
+                          aria-label="toggle password visibility"
+                          onClick={e => handleClickShowPassword()}
+                        >
+                          {showPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>,
+                        disableUnderline: true,
+                        style: {fontSize: 12}
+                      }}
+                      name="password"
+                      onChange={handleAddChange}
+                      type={showPassword ? "text" : "password"}
+                      aria-describedby="password-error"
+                      />
+                      <FormHelperText id="password-error" classes={{ error: classes.helper }}>
+                        {  hasAddError('password') ? addFormState.errors.password[0] : null }
+                      </FormHelperText>
+                  </FormControl>
+                  <Button
+                    className={classes.buttonStyle}
+                    fullWidth
+                    size="large"
+                    type="button"
+                    onClick={handleSignUp}
+                    variant="contained"
+                    disabled={ addLoading }
+                  >
+                    Sign Up
+                    {addLoading && <CircularProgress size={20} className={classes.buttonSaveProgress} />}
+                  </Button>
+              </div>
+            </form>
+          </div>
         </Drawer>
 
         <Snackbar open={success} autoHideDuration={2000} onClose={handleSuccess}>

@@ -215,7 +215,7 @@ commentsBody: {
 
 }));
 
-const Users = () => {
+const Admins = () => {
   const classes = useStyles();
 
 //  const theme = useTheme();
@@ -229,7 +229,7 @@ const Users = () => {
       if(!loading) {
         setLoading(true);
 
-        SERVICES.get(`user/all`)
+        SERVICES.get(`admin/all`)
         .then(response => {
              setLoading(false);
              setUsersList(response.data.data);
@@ -251,7 +251,7 @@ const Users = () => {
   }, []);
 
 
-  /* const handleUsersList = () => {
+  const handleUsersList = () => {
     if(!loading) {
       setLoading(true);
 
@@ -272,7 +272,7 @@ const Users = () => {
         console.log(errRes);
       })
     }
-  } */
+  }
 
   const handleFilter = query => {
     let newList = [];
@@ -281,6 +281,7 @@ const Users = () => {
     console.log(newList);
     setFilteredUsers(newList);
   }
+
 
 
   return (
@@ -298,4 +299,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default Admins;

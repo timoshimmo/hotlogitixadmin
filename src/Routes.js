@@ -13,7 +13,8 @@ import {
     Users as UsersPage,
     Withdrawals as WithdrawalsPage,
     Transactions as TransactionsPage,
-    ReportedCases as ReportedCasesPage
+    ReportedCases as ReportedCasesPage,
+    Admins as AdminsPage
 } from './views';
 
  const Routes = () => {
@@ -63,7 +64,14 @@ import {
                   layout={MainLayout}
                   path="/cases"
                 />
-        <Redirect to="/signup" />
+
+                <RouteWithLayout
+                   component={AdminsPage}
+                   exact
+                   layout={MainLayout}
+                   path="/admins"
+                 />
+              <Redirect to="/signin" />
     </Switch>
   )
 
