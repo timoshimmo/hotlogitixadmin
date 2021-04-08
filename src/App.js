@@ -1,25 +1,22 @@
-import logo from './logo.svg';
+import React, { Component } from 'react';
+import { Router } from 'react-router-dom';
+import { history } from './helpers';
 import './App.css';
+import validate from 'validate.js';
+import validators from './common/validators';
+import Routes from './Routes';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+validate.validators = {
+  ...validate.validators,
+  ...validators
+};
+
+export default class App extends Component {
+  render() {
+    return (
+        <Router history={history}>
+            <Routes />
+        </Router>
+    );
+  }
 }
-
-export default App;
