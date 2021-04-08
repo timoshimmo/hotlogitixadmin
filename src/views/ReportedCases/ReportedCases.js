@@ -231,34 +231,33 @@ const Users = () => {
 
   useEffect(() => {
 
-    handleUsersList();
+      const handleUsersList = () => {
+        if(!loading) {
+          setLoading(true);
 
+          SERVICES.get(`cases/all`)
+          .then(response => {
+               setLoading(false);
+               setUsersList(response.data.data);
+               setFilteredUsers(response.data.data);
+          })
+          .catch(function (error) {
+            setLoading(false);
+            const errRes = error.response;
+            if(errRes.status === 401 && errRes.data.message === 'You dont have permission for this action') {
+              localStorage.removeItem('stansAdmin');
+              localStorage.removeItem('stansonlyadmin');
+              history.push('/');
+            }
+            setServerError("Error loading reported cases");
+            console.log(errRes);
+          })
+        }
+      };
 
+      handleUsersList();
   }, []);
 
-  const handleUsersList = () => {
-    if(!loading) {
-      setLoading(true);
-
-      SERVICES.get(`cases/all`)
-      .then(response => {
-           setLoading(false);
-           setUsersList(response.data.data);
-           setFilteredUsers(response.data.data);
-      })
-      .catch(function (error) {
-        setLoading(false);
-        const errRes = error.response;
-        if(errRes.status === 401 && errRes.data.message === 'You dont have permission for this action') {
-          localStorage.removeItem('stansAdmin');
-          localStorage.removeItem('stansonlyadmin');
-          history.push('/');
-        }
-        setServerError("Error loading reported cases");
-        console.log(errRes);
-      })
-    }
-  }
 
   const handleFilter = query => {
     let newList = [];

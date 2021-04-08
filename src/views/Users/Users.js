@@ -237,6 +237,28 @@ const Users = () => {
 
 
   useEffect(() => {
+    const handleUsersList = () => {
+      if(!loading) {
+        setLoading(true);
+
+        SERVICES.get(`user/all`)
+        .then(response => {
+             setLoading(false);
+             setUsersList(response.data.data);
+             setFilteredUsers(response.data.data);
+        })
+        .catch(function (error) {
+          setLoading(false);
+          const errRes = error.response;
+          if(errRes.status === 401 && errRes.data.message === 'You dont have permission for this action') {
+            localStorage.removeItem('stansAdmin');
+            localStorage.removeItem('stansonlyadmin');
+            history.push('/');
+          }
+          console.log(errRes);
+        })
+      }
+    };
     handleUsersList();
   }, []);
 
