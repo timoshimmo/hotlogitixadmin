@@ -17,6 +17,9 @@ import {
   TableContainer,
   FormControl,
   InputLabel,
+  Avatar,
+  Typography,
+  Button,
   Drawer,
   Grid
 } from '@material-ui/core';

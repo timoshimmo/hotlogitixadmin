@@ -222,6 +222,7 @@ const Transactions = () => {
 
   const theme = useTheme();
 
+  const [serverError, setServerError] = useState(false);
   const [success, setSuccess] = useState(false);
   const [failed, setFailed] = useState(false);
   const [usersList, setUsersList] = useState([]);
@@ -254,6 +255,7 @@ const Transactions = () => {
           localStorage.removeItem('stansonlyadmin');
           history.push('/');
         }
+        setServerError("Erroe retrieving transaction list");
         console.log(errRes);
       })
     }

@@ -117,7 +117,7 @@ const Main = props => {
       >
         <Hidden mdDown>
          <div className={classes.leftDiv} >
-            <Leftbar onDialogOpen={handleDialogOpen} />
+            <Leftbar />
           </div>
         </Hidden>
         <div className={classes.mainDiv}>
