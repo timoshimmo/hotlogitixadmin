@@ -535,6 +535,8 @@ const SignIn = props => {
       }
     }));
 
+  }
+
   /*};
 
   function handleChangeTab(event, newValue) {
