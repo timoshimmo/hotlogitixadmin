@@ -224,6 +224,7 @@ const Users = () => {
 
 //  const theme = useTheme();
 
+  const [serverError, setServerError] = useState(false);
   const [success, setSuccess] = useState(false);
   const [failed, setFailed] = useState(false);
   const [usersList, setUsersList] = useState([]);
@@ -256,6 +257,7 @@ const Users = () => {
           localStorage.removeItem('stansonlyadmin');
           history.push('/');
         }
+        setServerError("Error loading reported cases");
         console.log(errRes);
       })
     }
