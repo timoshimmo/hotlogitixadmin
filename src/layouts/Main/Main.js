@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { useMediaQuery, Hidden  } from '@material-ui/core';
+import { Hidden  } from '@material-ui/core';
 
 import { Leftbar } from './components';
 
@@ -78,7 +78,7 @@ const Main = props => {
   const { children } = props;
 
   const classes = useStyles();
-  const theme = useTheme();
+//  const theme = useTheme();
 /*  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'), {
     defaultMatches: true
   });

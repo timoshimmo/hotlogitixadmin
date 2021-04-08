@@ -232,7 +232,7 @@ const Withdrawals = () => {
     handleWithdrawalsList();
 
 
-  }, []);
+  }, [usersList, filteredUsers]);
 
   const handleWithdrawalsList = () => {
     if(!loading) {
