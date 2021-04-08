@@ -106,7 +106,7 @@ function MoreIcon(props) {
   );
 }
 
-function HomeIcon(props) {
+/*function HomeIcon(props) {
   return (
     <SvgIcon {...props} viewBox="0 0 23.6 26">
       <g transform="translate(-6.5 -4)">
@@ -115,7 +115,7 @@ function HomeIcon(props) {
       </g>
     </SvgIcon>
   );
-}
+} */
 
 
 const SidebarNav = props => {

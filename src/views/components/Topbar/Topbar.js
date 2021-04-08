@@ -1,10 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography, Toolbar } from '@material-ui/core';
-//import { history } from '../../../helpers';
-import SvgIcon from '@material-ui/core/SvgIcon';
 
 
 const useStyles = makeStyles(theme => ({
@@ -57,8 +54,6 @@ const useStyles = makeStyles(theme => ({
     const classes = useStyles();
 
     const { title } = props;
-    let history = useHistory();
-
 
     return (
 

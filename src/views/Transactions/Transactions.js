@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  useMediaQuery,
-  useTheme,
   Hidden,
   Icon
 } from '@material-ui/core';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
-import SvgIcon from '@material-ui/core/SvgIcon';
 import { Topbar } from '../components';
 import SERVICES from '../../util/webservices';
 import { history } from '../../helpers';
@@ -220,7 +217,7 @@ commentsBody: {
 const Transactions = () => {
   const classes = useStyles();
 
-  const theme = useTheme();
+  //const theme = useTheme();
 
   const [serverError, setServerError] = useState(false);
   const [success, setSuccess] = useState(false);

@@ -16,9 +16,7 @@ import {
   Paper,
   InputAdornment,
   FormControl,
-  InputLabel,
-  useMediaQuery,
-  useTheme
+  InputLabel
 } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { green } from '@material-ui/core/colors';
@@ -66,7 +64,7 @@ function TabContainer(props) {
       role="tabpanel"
       hidden={value !== index}
       style={{ padding: 8 * 3, width: '100%' }}>
-      {props.children}
+      {children}
     </Typography>
   );
 }
@@ -462,7 +460,6 @@ const SignIn = props => {
   });
 
   const [loading, setLoading] = React.useState(false);
-  const [socialLoading, setSocialLoading] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [serverError, setServerError] = React.useState(null);
   const [showPassword, setShowPassword] = React.useState(false);
@@ -471,7 +468,7 @@ const SignIn = props => {
   const [forgotLoading, setForgotLoading] = React.useState(false);
   const [successOpen, setSuccessOpen] = React.useState(false);
   const [forgottenError, setForgottenError] = React.useState(null);
-  const theme = useTheme();
+//  const theme = useTheme();
 
 
   useEffect(() => {
