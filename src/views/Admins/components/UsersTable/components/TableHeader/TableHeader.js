@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import { makeStyles } from '@material-ui/core/styles';
+import { withStyles, makeStyles } from '@material-ui/styles';
 import {
   TableCell,
   TableHead,
@@ -9,10 +9,30 @@ import {
 } from '@material-ui/core';
 
 const headCells = [
-  { id: 'fullname', numeric: false, disablePadding: false, label: 'Full Name.' },
-  { id: 'username', numeric: false, disablePadding: false, label: 'Username' },
+  { id: 'fullname', numeric: false, disablePadding: false, label: 'Full Name' },
+  { id: 'mobileNo', numeric: false, disablePadding: false, label: 'Mobile No.' },
+  { id: 'email', numeric: false, disablePadding: false, label: 'Email' },
   { id: 'role', numeric: false, disablePadding: false, label: 'Role' },
 ];
+
+const StyledTableCell = withStyles(() => ({
+  head: {
+    backgroundColor: '#FAFAFA',
+    color: '#494949',
+    paddingTop: 10,
+    paddingBottom: 10,
+    borderBottom: '1px solid #D6D6D6',
+    fontSize: 12,
+  },
+  body: {
+    fontSize: 12,
+    color: '#696F79',
+    paddingTop: 0,
+    paddingBottom: 0,
+    borderBottom: '1px solid #D6D6D6',
+  },
+}))(TableCell);
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -37,22 +57,22 @@ const useStyles = makeStyles(theme => ({
     width: 1,
   },
   headerColor: {
-    backgroundColor: '#2688FB'
+    backgroundColor: '#FFFFFF'
 
   },
   headerCells: {
-    color: '#fff'
+    color: '#363a46'
   },
   headerSortLabel: {
-    color: '#fff',
+    color: '#363a46',
     '&:active': {
-      color: '#fff'
+      color: '#363a46'
     },
     '&:hover': {
-      color: '#fff'
+      color: '#fff#363a46'
     },
     '&.MuiTableSortLabel-root.MuiTableSortLabel-active': {
-      color: '#fff'
+      color: '#363a46'
     }
   }
 }));
@@ -68,9 +88,9 @@ function TableHeader(props) {
     <TableHead>
       <TableRow className={classes.headerColor}>
         {headCells.map(headCell => (
-          <TableCell
+          <StyledTableCell
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
+            align={headCell.numeric ? 'center' : 'left'}
             sortDirection={orderBy === headCell.id ? order : false}
             className={classes.headerCells}
           >
@@ -88,7 +108,7 @@ function TableHeader(props) {
                 </span>
               ) : null}
             </TableSortLabel>
-          </TableCell>
+          </StyledTableCell>
         ))}
       </TableRow>
     </TableHead>

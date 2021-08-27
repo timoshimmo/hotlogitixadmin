@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import { Grid, Typography } from '@material-ui/core';
 import { AppBar, Toolbar, IconButton } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
@@ -75,8 +75,8 @@ const useStyles = makeStyles(theme => ({
     return (
       <SvgIcon {...props} viewBox="0 0 17.027 17.027">
         <g transform="translate(0.5 0.5)">
-          <path class="a" d="M21.562,14.531A7.031,7.031,0,1,1,14.531,7.5,7.031,7.031,0,0,1,21.562,14.531Z" transform="translate(-7.5 -7.5)"/>
-          <path class="a" d="M45.448,45.448l-3.823-3.823" transform="translate(-29.628 -29.628)"/>
+          <path className="a" d="M21.562,14.531A7.031,7.031,0,1,1,14.531,7.5,7.031,7.031,0,0,1,21.562,14.531Z" transform="translate(-7.5 -7.5)"/>
+          <path className="a" d="M45.448,45.448l-3.823-3.823" transform="translate(-29.628 -29.628)"/>
         </g>
       </SvgIcon>
     );

@@ -1,33 +1,30 @@
 {
-  "name": "stansonlyadmin",
+  "name": "hotlogistixadmin",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/core": "^7.14.6",
     "@date-io/moment": "^2.10.8",
-    "@fortawesome/fontawesome-svg-core": "^1.2.32",
-    "@material-ui/core": "^4.11.0",
-    "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.56",
-    "@material-ui/pickers": "^3.2.10",
+    "@emotion/react": "^11.4.0",
+    "@emotion/styled": "^11.3.0",
+    "@material-ui/core": "^5.0.0-beta.1",
+    "@material-ui/icons": "^5.0.0-beta.1",
+    "@material-ui/lab": "^5.0.0-alpha.40",
     "@material-ui/styles": "^4.10.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.1",
     "clsx": "^1.1.1",
-    "core-js": "^3.8.2",
-    "fg-loadcss": "^3.1.0",
-    "lodash": "^4.17.20",
-    "material-ui-image": "^3.2.4",
+    "firebase": "^8.8.1",
     "moment": "^2.26.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-number-format": "^4.4.1",
+    "react-number-format": "^4.7.3",
     "react-perfect-scrollbar": "^1.5.8",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
-    "uuid": "^8.3.0",
     "validate.js": "^0.13.1",
     "web-vitals": "^1.0.1"
   },
@@ -56,5 +53,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.14.7",
+    "@babel/preset-react": "^7.14.5",
+    "eslint": "^7.31.0",
+    "eslint-plugin-react": "^7.24.0"
   }
 }

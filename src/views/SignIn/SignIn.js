@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { loadCSS } from 'fg-loadcss';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
-import { makeStyles } from '@material-ui/core/styles';
-import axios from 'axios';
+import { makeStyles } from '@material-ui/styles';
 import {
   Grid,
   Button,
@@ -24,15 +22,18 @@ import Collapse from '@material-ui/core/Collapse';
 import CloseIcon from '@material-ui/icons/Close';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import firebase from "firebase/app";
+import "firebase/auth";
+import DB from '../../util/firebaseinit';
 //Link as RouterLink, Link,
 //const clientId = '631148650233-8jnn4i4t1ttk4ohuq8t4207en3rk6fju.apps.googleusercontent.com';
 
 const schema = {
-  username: {
+  email: {
     presence: { allowEmpty: false, message: 'is required' },
+    email: true,
     length: {
-      minimum: 6,
-      maximum: 20
+      maximum: 150
     }
   },
   password: {
@@ -94,7 +95,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'flex-end',
-    backgroundImage: 'linear-gradient(0deg, rgba(0, 12, 25, 1), rgba(83, 92, 101, 0), rgba(85, 94, 103, 1)), url(/images/humphrey-muleba-unsplash.png)',
+    backgroundImage: 'linear-gradient(0deg, rgba(0, 12, 25, 1), rgba(83, 92, 101, 0), rgba(85, 94, 103, 1)), url(/images/start_image.jpg)',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
@@ -119,7 +120,10 @@ const useStyles = makeStyles(theme => ({
   content: {
     height: '100%',
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    background: 'linear-gradient(150deg, rgba(80, 86, 104, 1), rgba(80, 86, 104, 1), rgba(54, 58, 70, 0))',
+    backgroundRepeat: "no-repeat",
+    backgroundSize: 'cover',
   },
   contentHeader: {
     display: 'flex',
@@ -127,7 +131,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     paddingTop: theme.spacing(5),
     paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2)
+    paddingRight: theme.spacing(2),
   },
   logoImage: {
     marginLeft: theme.spacing(4)
@@ -140,7 +144,6 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: '20%',
     paddingRight: '20%',
     paddingBottom: '5%',
-    backgroundColor: '#F4F6F8',
     [theme.breakpoints.down('sm')]: {
       paddingLeft: '8%',
       paddingRight: '8%'
@@ -187,6 +190,7 @@ const useStyles = makeStyles(theme => ({
     fontSize: 12,
     width: '100%',
     borderRadius: '70px',
+    color: theme.palette.text.primary,
     transition: theme.transitions.create(['background-color']),
     padding: '5px 20px',
     '&$focused': {
@@ -205,27 +209,22 @@ const useStyles = makeStyles(theme => ({
   policyCheckbox: {
     marginLeft: '-14px'
   },
-  signUpButton: {
-    margin: theme.spacing(2, 0),
+  buttonStyle: {
+    marginTop: theme.spacing(4),
     borderWidth: 1,
     borderStyle: 'solid',
     borderRadius: 70,
     borderColor: '#fff',
     textTransform: 'none',
     fontSize: 14,
+    minHeight: 50,
     fontWeight: 400,
     color: '#fff',
     font: 'Helvetica Neue',
-    WebkitBoxShadow: 'none',
-  	MozBoxShadow: 'none',
-  	boxShadow: 'none',
-    backgroundColor: '#2688FB',
+    backgroundColor: theme.palette.primary.main,
     '&:hover': {
-      backgroundColor: '#0573f0',
+      backgroundColor: theme.palette.primary.dark,
       color: "#fff",
-      WebkitBoxShadow: 'none',
-      MozBoxShadow: 'none',
-      boxShadow: 'none',
     }
   },
   input: {
@@ -237,7 +236,7 @@ const useStyles = makeStyles(theme => ({
   buttonProgress: {
     color: '#2688fb',
     position: 'absolute',
-    top: '45%',
+    top: '50%',
     left: '50%',
     marginTop: -12,
     marginLeft: -12,
@@ -261,60 +260,6 @@ const useStyles = makeStyles(theme => ({
     height: '100%',
     display: 'flex',
     flexDirection: 'column'
-  },
-  btnTwitter: {
-    color: '#1DA1F2',
-    backgroundColor: theme.palette.primary.contrastText,
-    borderColor: '#1DA1F2',
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderRadius: 70,
-    textTransform: 'none',
-    fontSize: 12,
-    padding: '10px 0px',
-    fontWeight: 400,
-    font: 'Helvetica Neue',
-    width: '100%',
-    '&:hover': {
-      backgroundColor: '#1DA1F2',
-      color: theme.palette.primary.contrastText,
-    },
-  },
-  btnFacebook: {
-    color: '#4267B2',
-    backgroundColor: theme.palette.primary.contrastText,
-    borderColor: '#4267B2',
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderRadius: 70,
-    textTransform: 'none',
-    fontSize: 12,
-    padding: '10px 0px',
-    fontWeight: 400,
-    font: 'Helvetica Neue',
-    width: '100%',
-    '&:hover': {
-      backgroundColor: '#4267B2',
-      color: theme.palette.primary.contrastText,
-    },
-  },
-  btnGoogle: {
-    color: '#4885ed',
-    backgroundColor: theme.palette.primary.contrastText,
-    borderColor: '#4885ed',
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderRadius: 70,
-    textTransform: 'none',
-    fontSize: 12,
-    padding: '10px 0px',
-    fontWeight: 400,
-    font: 'Helvetica Neue',
-    width: '100%',
-    '&:hover': {
-      backgroundColor: '#4885ed',
-      color: theme.palette.primary.contrastText,
-    },
   },
   dividerContainer: {
     marginTop: theme.spacing(1),
@@ -372,19 +317,23 @@ const useStyles = makeStyles(theme => ({
 
   titleTextStyle: {
     fontSize: '1.5rem',
-    color: '#04011D',
+    color: theme.palette.text.primary,
     fontWeight: 500,
     [theme.breakpoints.down(375)]: {
       fontSize: '1.25rem',
       fontWeight: 500,
     }
   },
-  subtitleSpacing: {
+  subTitle: {
     marginBottom: 20,
     fontSize: 13,
+    color: theme.palette.text.primary,
     [theme.breakpoints.down(375)]: {
         fontSize: 12,
     }
+  },
+  subtitleSpacing: {
+    marginBottom: 20,
   },
   helper: {
     fontSize: 11
@@ -436,6 +385,15 @@ const useStyles = makeStyles(theme => ({
   },
   btnBackRoot: {
     minWidth: 0
+  },
+  inputStyle: {
+    padding: '7px 10px 7px 10px'
+  },
+  notchStyle: {
+    border: 'none'
+  },
+  inputRootStyle: {
+    paddingRight: 0
   }
 }));
 
@@ -544,10 +502,11 @@ const useStyles = makeStyles(theme => ({
 
 */
 
-const SignIn = props => {
-  const { history } = props;
+const SignIn = () => {
+  //const { history } = props;
 
   const classes = useStyles();
+  let history = useHistory();
 
   const [formState, setFormState] = useState({
     isValid: false,
@@ -578,14 +537,9 @@ const SignIn = props => {
   useEffect(() => {
 
     if (typeof localStorage !== 'undefined') {
-      localStorage.removeItem('stansAdmin');
-      localStorage.removeItem('stansonlyadmin');
+      localStorage.removeItem('hotlgtxAdminUser');
+      localStorage.removeItem('hotlgtxAdminUser');
     }
-
-    loadCSS(
-     'https://use.fontawesome.com/releases/v5.12.0/css/all.css',
-     document.querySelector('#font-awesome-css'),
-   );
 
     const errors = validate(formState.values, schema);
     const errForgot = validate(forgotForm.values, schForgot);
@@ -670,39 +624,52 @@ const SignIn = props => {
 
   */
 
-  const handleSignIn = event => {
+   const handleSignIn = event => {
       event.preventDefault();
 
     if (!loading) {
       setLoading(true);
 
-      const obj = {
-        username: formState.values.username,
-        password: formState.values.password,
-        remember_me: true
-      };
+      const email = formState.values.email;
+      const password = formState.values.password
 
-      axios.post('https://api.stansonly.com/admin/login', obj)
+    /*  const obj = {
+        email: formState.values.email,
+        password: formState.values.password
+      }; */
+
+      firebase.auth().signInWithEmailAndPassword(email, password)
+     .then((userCredential) => {
+       // Signed in
+       setLoading(false);
+       const user = userCredential.user;
+       console.log("admin-id:", user.uid);
+       DB.collection("admin").doc(user.uid).get().then((doc) => {
+         if (doc.exists) {
+           console.log("Document data:", doc.data());
+            localStorage.setItem('hotlgtxAdminUser', JSON.stringify({ name: doc.data().fullname, userid: user.uid, role: doc.data().role }));
+            history.push('/dashboard');
+
+         } else {
+             setServerError("User not found!");
+             setOpen(true);
+         }
+       });
+
+     })
+     .catch((error) => {
+       setLoading(false);
+       setServerError(error.message);
+       setOpen(true);
+     });
+
+  /*    axios.post('https://hotlogistixapi.herokuapp.com/admin/login', obj)
         .then(response => {
-          const res = response.data;
-          if (res.status === 'success') {
-            console.log(JSON.stringify(res.data));
-            localStorage.setItem('stansonlyadmin', res.data.token);
-            localStorage.setItem('stansAdmin', JSON.stringify({ username: res.data.username, userid: res.data.id, role: res.data.role }));
-            axios.defaults.headers.common['x-access-token'] = res.data.token;
-            console.log(res);
-            console.log(res.data.token);
-            setLoading(false);
-            history.push('/users');
-
-          /*  setLoading(false);
-            const resError = "Something went wrong please try again";
-            setServerError(resError);
-            setOpen(true); */
-          }
-          else {
-            console.log(response);
-          }
+          console.log(response);
+        //  localStorage.setItem('stansonlyadmin', res.data.token);
+        //  localStorage.setItem('stansAdmin', JSON.stringify({ username: res.data.username, userid: res.data.id, role: res.data.role }));
+        //  axios.defaults.headers.common['x-access-token'] = res.data.token);
+          setLoading(false);
 
         })
       .catch(error => {
@@ -710,13 +677,13 @@ const SignIn = props => {
           const resError = error.response ? error.response.data.message : "Something went wrong please try again";
           setServerError(resError);
           setOpen(true);
-        })
+        }) */
 
     }
 
   }
 
-/*  const handleforgotUsername = event => {
+ /*const handleforgotUsername = event => {
 
     event.preventDefault();
 
@@ -756,6 +723,8 @@ const SignIn = props => {
 
     }
 
+      {loading && <CircularProgress size={28} className={classes.buttonProgress} />}
+
   } */
 
   const handleClickShowPassword = () => {
@@ -785,7 +754,7 @@ const SignIn = props => {
             <div className={classes.quote}>
               <div className={classes.quoteInner}>
                 <Typography className={classes.quoteText} variant="button" display="block" gutterBottom>
-                 Stansonly Users
+                 Hotlogistix Users
                 </Typography>
                 <div className={classes.person}>
                   <Typography
@@ -819,9 +788,9 @@ const SignIn = props => {
               <div className={classes.contentHeader}>
                 <img
                   alt="Logo"
-                  src="/images/Stansoly_new_blue.png"
-                  height="60"
-                  width="80"
+                  src="/images/hotlogistix_logo_white.png"
+                  height="80"
+                  width="154"
                 />
               </div>
               <div className={classes.contentBody}>
@@ -835,12 +804,12 @@ const SignIn = props => {
                         align="center"
                         className={classes.titleTextStyle}
                       >
-                        Welcome to Stansonly Admin
+                        Welcome to Hotlogistix Admin
                       </Typography>
                       <Typography
                         variant="body2"
                         display="block"
-                        className={classes.subtitleSpacing}
+                        className={classes.subTitle}
                         align="center"
                       >
                         Sign in to start performing admin services!
@@ -877,25 +846,29 @@ const SignIn = props => {
                           autoComplete="off"
                         >
 
-                          <InputLabel shrink htmlFor="username">
-                            Username
+                          <InputLabel shrink htmlFor="email">
+                            Email
                           </InputLabel>
-                          <FormControl error={hasError('username')} className={classes.formComponent}>
+                          <FormControl error={hasError('email')} className={classes.formComponent}>
                             <TextField
-                                id="username-input"
+                                id="email-input"
                                 className={classes.textField}
                                 fullWidth
-                                name="username"
+                                name="email"
                                 type="text"
                                 onChange={handleChange}
                                 InputProps={{
-                                  disableUnderline: true,
+                                  disableunderline: "true",
+                                  classes: {
+                                    notchedOutline: classes.notchStyle,
+                                    input: classes.inputStyle
+                                  },
                                   style: {fontSize: 12}
                                 }}
-                                aria-describedby="username-error"
+                                aria-describedby="email-error"
                               />
-                              <FormHelperText id="username-error" classes={{ error: classes.helper }}>
-                                {  hasError('username') ? formState.errors.username[0] : null }
+                              <FormHelperText id="email-error" classes={{ error: classes.helper }}>
+                                {  hasError('email') ? formState.errors.email[0] : null }
                               </FormHelperText>
                           </FormControl>
                             <InputLabel shrink htmlFor="password">
@@ -911,12 +884,17 @@ const SignIn = props => {
                                   <IconButton
                                     size='small'
                                     aria-label="toggle password visibility"
-                                    onClick={e => handleClickShowPassword()}
+                                    onClick={handleClickShowPassword}
                                   >
-                                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                                    {showPassword ? <Visibility fontSize="small" /> : <VisibilityOff fontSize="small" />}
                                   </IconButton>
                                 </InputAdornment>,
-                                  disableUnderline: true,
+                                  disableunderline: "true",
+                                  classes: {
+                                    root: classes.inputRootStyle,
+                                    notchedOutline: classes.notchStyle,
+                                    input: classes.inputStyle
+                                  },
                                   style: {fontSize: 12}
                                 }}
                                 name="password"
@@ -929,16 +907,16 @@ const SignIn = props => {
                                 </FormHelperText>
                             </FormControl>
                             <Button
-                              className={classes.signUpButton}
+                              className={classes.buttonStyle}
                               fullWidth
                               size="large"
                               type="submit"
                               variant="contained"
+                              disabled={loading}
                               onClick={handleSignIn}
-                              disabled={ loading }
                             >
                               Sign In
-                              {loading && <CircularProgress size={28} className={classes.buttonProgress} />}
+                              {loading && <CircularProgress size={20} className={classes.buttonProgress} />}
                             </Button>
                         </form>
                     </div>
@@ -949,10 +927,6 @@ const SignIn = props => {
         </Grid>
       </div>
     );
-};
-
-SignIn.propTypes = {
-  history: PropTypes.object
 };
 
 export default withRouter(SignIn);

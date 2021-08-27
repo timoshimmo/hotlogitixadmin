@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import {
   Card,
   CardActions,
@@ -144,7 +145,7 @@ const UsersTable = props => {
 
                           { stableSort(usersList, getComparator(order, orderBy))
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            .map((row, index) => {
+                            .map((row) => {
                                   return (
                                     <TableRow
                                        hover
@@ -192,8 +193,12 @@ const UsersTable = props => {
         </Card>
       </div>
   );
-
-
 }
+
+UsersTable.propTypes = {
+  className: PropTypes.string,
+  usersList: PropTypes.array,
+  handleFilter: PropTypes.func
+};
 
 export default UsersTable;

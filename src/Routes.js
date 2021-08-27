@@ -11,10 +11,14 @@ import {
     SignUp as SignUpPage,
     SignIn as SignInPage,
     Users as UsersPage,
+    Riders as RidersPage,
     Withdrawals as WithdrawalsPage,
-    Transactions as TransactionsPage,
+    Orders as OrdersPage,
+    Trips as TripsPage,
+    History as HistoryPage,
     ReportedCases as ReportedCasesPage,
-    Admins as AdminsPage
+    Admins as AdminsPage,
+    Dashboard as DashboardPage
 } from './views';
 
  const Routes = () => {
@@ -45,11 +49,32 @@ import {
               />
 
               <RouteWithLayout
-                 component={TransactionsPage}
+                 component={RidersPage}
                  exact
                  layout={MainLayout}
-                 path="/transactions"
+                 path="/riders"
                />
+
+              <RouteWithLayout
+                 component={OrdersPage}
+                 exact
+                 layout={MainLayout}
+                 path="/orders"
+               />
+
+               <RouteWithLayout
+                  component={TripsPage}
+                  exact
+                  layout={MainLayout}
+                  path="/trips"
+                />
+
+                <RouteWithLayout
+                   component={HistoryPage}
+                   exact
+                   layout={MainLayout}
+                   path="/history"
+                 />
 
               <RouteWithLayout
                  component={WithdrawalsPage}
@@ -65,12 +90,18 @@ import {
                   path="/cases"
                 />
 
-                <RouteWithLayout
-                   component={AdminsPage}
-                   exact
-                   layout={MainLayout}
-                   path="/admins"
-                 />
+              <RouteWithLayout
+                 component={AdminsPage}
+                 exact
+                 layout={MainLayout}
+                 path="/admins"
+               />
+             <RouteWithLayout
+                component={DashboardPage}
+                exact
+                layout={MainLayout}
+                path="/dashboard"
+              />
               <Redirect to="/signin" />
     </Switch>
   )

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
+import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { makeStyles } from '@material-ui/core/styles';
+import { withStyles, makeStyles } from '@material-ui/styles';
 import validate from 'validate.js';
 import {
   Card,
@@ -22,7 +23,8 @@ import {
   Typography,
   Button,
   Drawer,
-  Grid
+  Grid,
+  Chip
 } from '@material-ui/core';
 import { TableToolbar, TableHeader, UsersToolbar } from './components';
 import SERVICES from '../../../../util/webservices';
@@ -32,6 +34,30 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import axios from 'axios';
+
+const StyledTableCell = withStyles(() => ({
+  head: {
+    backgroundColor: '#FAFAFA',
+    color: '#494949',
+    paddingTop: 10,
+    paddingBottom: 10,
+    borderBottom: '1px solid #D6D6D6',
+    fontSize: 12,
+  },
+  body: {
+    fontSize: 12,
+    color: '#696F79',
+    paddingTop: 15,
+    paddingBottom: 15,
+    borderBottom: '1px solid #D6D6D6',
+  },
+}))(TableCell);
+
+const StyledTableRow = withStyles(() => ({
+  root: {
+      backgroundColor: "#FFFFFF",
+  },
+}))(TableRow);
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -141,10 +167,8 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(2)
   },
   content: {
-    padding: 0
-  },
-  table: {
-    minWidth: 1050
+    padding: 0,
+    minHeight: 265
   },
   nameContainer: {
     display: 'flex',
@@ -343,6 +367,23 @@ unSubscribeButtonStyle: {
      color: "#fff",
    },
 },
+
+adminStyles: {
+  color: '#3f51b5',
+  borderColor: '#3f51b5'
+},
+adminLabelStyle: {
+  color: '#3f51b5',
+  fontSize: 11
+},
+superAdminStyles: {
+  color: '#ff3d00',
+  borderColor: '#ff3d00'
+},
+superAdminLabelStyle: {
+  color: '#ff3d00',
+  fontSize: 11
+},
 }));
 
 /*
@@ -477,7 +518,7 @@ const UsersTable = props => {
     setToggleCreateDrawer(false);
   }
 
-  const handlOpenCreateDrawer = id => {
+  const handlOpenCreateDrawer = () => {
       setToggleCreateDrawer(true);
 
   }
@@ -708,8 +749,11 @@ const handleFailed = (event, reason) => {
   const hasError = field =>
     formState.touched[field] && formState.errors[field] ? true : false;
 
-    const hasAddError = field =>
-      addFormState.touched[field] && addFormState.errors[field] ? true : false;
+  const hasAddError = field =>
+    addFormState.touched[field] && addFormState.errors[field] ? true : false;
+
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - usersList.length) : 0;
 
   return (
 
@@ -724,7 +768,6 @@ const handleFailed = (event, reason) => {
                 <TableToolbar handlOpenCreateDrawer={handlOpenCreateDrawer} />
                   <TableContainer>
                       <Table
-                        className={classes.table}
                         aria-labelledby="tables"
                         aria-label="users table">
 
@@ -737,27 +780,52 @@ const handleFailed = (event, reason) => {
 
                           { stableSort(usersList, getComparator(order, orderBy))
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            .map((row, index) => {
+                            .map((row) => {
                                   return (
-                                    <TableRow
+                                    <StyledTableRow
                                        hover
-                                       role="button"
                                        tabIndex={-1}
                                        key={row.id}
                                        onClick={()=>handlOpenDrawer(row.id)}
                                      >
-                                      <TableCell component="th" id={row.id} scope="row">
+                                      <StyledTableCell component="th" id={row.id} scope="row">
                                         {row.fullname}
-                                      </TableCell>
-                                      <TableCell>
-                                        {row.username}
-                                      </TableCell>
-                                      <TableCell>
-                                        {row.role < 1 ? 'Admin' : 'Super Admin'}
-                                      </TableCell>
-                                   </TableRow>
+                                      </StyledTableCell>
+                                      <StyledTableCell>
+                                        {row.mobileNo}
+                                      </StyledTableCell>
+                                      <StyledTableCell>
+                                        {row.email}
+                                      </StyledTableCell>
+                                      <StyledTableCell>
+                                        {row.role < 1 ?
+                                          <Chip
+                                            label="Admin"
+                                            variant="outlined"
+                                            size="small"
+                                            classes={{ root: classes.adminStyles, label: classes.adminLabelStyle }}
+                                          />
+                                          :
+                                          <Chip
+                                            label="Super Admin"
+                                            variant="outlined"
+                                            size="small"
+                                            classes={{ root: classes.superAdminStyles, label: classes.superAdminLabelStyle }}
+                                          />
+                                      }
+                                      </StyledTableCell>
+                                   </StyledTableRow>
                                  );
                             })}
+                            {emptyRows > 0 && (
+                                <StyledTableRow
+                                  style={{
+                                    height: 53 * emptyRows,
+                                  }}
+                                >
+                                  <StyledTableCell colSpan={7} />
+                                </StyledTableRow>
+                              )}
                           </TableBody>
                        </Table>
                   </TableContainer>
@@ -869,7 +937,7 @@ const handleFailed = (event, reason) => {
                           <IconButton
                             size='small'
                             aria-label="toggle new password visibility"
-                            onClick={e => handleClickShowNewPassword()}
+                            onClick={handleClickShowNewPassword}
                           >
                             {showNewPassword ? <Visibility /> : <VisibilityOff />}
                           </IconButton>
@@ -900,7 +968,7 @@ const handleFailed = (event, reason) => {
                           <IconButton
                             size='small'
                             aria-label="toggle confirm password visibility"
-                            onClick={e => handleClickShowConfirmPassword()}
+                            onClick={handleClickShowConfirmPassword}
                           >
                             {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
                           </IconButton>
@@ -1000,7 +1068,7 @@ const handleFailed = (event, reason) => {
                         <IconButton
                           size='small'
                           aria-label="toggle password visibility"
-                          onClick={e => handleClickShowPassword()}
+                          onClick={handleClickShowPassword}
                         >
                           {showPassword ? <Visibility /> : <VisibilityOff />}
                         </IconButton>
@@ -1047,8 +1115,12 @@ const handleFailed = (event, reason) => {
         </Snackbar>
       </div>
   );
-
-
 }
+
+UsersTable.propTypes = {
+  className: PropTypes.string,
+  usersList: PropTypes.array,
+  handleFilter: PropTypes.func
+};
 
 export default UsersTable;

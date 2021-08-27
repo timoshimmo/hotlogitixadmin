@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import { Hidden  } from '@material-ui/core';
 
 import { Leftbar } from './components';
@@ -15,10 +15,10 @@ import { Leftbar } from './components';
 const useStyles = makeStyles(theme => ({
   root: {
     height: '100%',
-    minHeight: '100%',
+    maxHeight: '100vh',
     backgroundColor: '#fff',
     maxWidth: '100% !important',
-    overflowX: 'hidden !important'
+    overflowX: 'hidden !important',
   },
   shiftContent: {
     paddingLeft: 240
@@ -32,14 +32,13 @@ const useStyles = makeStyles(theme => ({
   leftDiv: {
     display: 'flex',
     maxHeight: '100vh',
-    backgroundColor: '#fff',
+    backgroundColor: theme.palette.primary.main,
     flexDirection: 'column',
     alignItems: 'center',
-    width: '20%',
+    width: '17%',
     position: 'sticky',
     right: 0,
     top: 0,
-    zIndex: 100,
     borderRight: '1px solid #F2F4F7',
   },
   mainDiv: {
@@ -48,7 +47,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#fff',
     flexDirection: 'column',
     alignItems: 'center',
-    width: '80%',
+    width: '83%',
     [theme.breakpoints.down('sm')]: {
         width: '100%',
     }

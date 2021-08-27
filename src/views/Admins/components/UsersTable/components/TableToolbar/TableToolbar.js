@@ -1,12 +1,16 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import FilterListIcon from '@material-ui/icons/FilterList';
 import {
   Button,
-  Grid
+  Grid,
+  Tooltip,
+  IconButton
 } from '@material-ui/core';
-
+import AddIcon from '@material-ui/icons/Add';
 
 const useToolbarStyles = makeStyles(theme => ({
   root: {
@@ -20,25 +24,13 @@ const useToolbarStyles = makeStyles(theme => ({
 
   buttonStyle: {
     textTransform: 'none',
-    borderStyle: 'solid',
-    borderRadius: 70,
-    borderWidth: 1,
-    fontSize: 14,
-    fontWeight: 400,
-    font: 'Helvetica Neue',
-    WebkitBoxShadow: 'none',
-    MozBoxShadow: 'none',
-    boxShadow: 'none',
-    backgroundColor: '#4caf50',
-    borderColor: '#fff',
-    color: '#fff',
-    '&:hover': {
-       WebkitBoxShadow: 'none',
-       MozBoxShadow: 'none',
-       boxShadow: 'none',
-       backgroundColor: '#388e3c',
-       color: "#fff",
-     },
+    color: theme.palette.success.main,
+    fontSize: 12,
+    marginRight: 15,
+    borderColor: theme.palette.success.main,
+    "&:hover": {
+      borderColor: theme.palette.success.main,
+    }
   },
 }));
 
@@ -51,26 +43,47 @@ const TableToolbar = props => {
       className={classes.root}
     >
 
-    <Grid container justify="space-between">
-      <Grid item>
+    <Grid style={{ paddingRight: 10}} container justify="space-between" alignItems="center">
+      <Grid
+        item
+        lg={6}
+        >
         <Typography className={classes.title} variant="h6" id="tableTitle">
-          Admins List
+          Admin List
         </Typography>
       </Grid>
-      <Grid item>
-        <Button
-          variant="contained"
-          className={classes.buttonStyle}
-          onClick={handlOpenCreateDrawer}
-          >
-           Create Admin
-        </Button>
+      <Grid
+        item
+        lg={6}
+        >
+        <Grid container justifyContent="flex-end">
+            <Grid item>
+              <Button
+                variant="outlined"
+                className={classes.buttonStyle}
+                startIcon={<AddIcon style={{ fontSize: 14 }} />}
+                onClick={handlOpenCreateDrawer}
+                >
+                 New Admin
+              </Button>
+              <Tooltip title="Filter users">
+               <IconButton aria-label="filter users">
+                 <FilterListIcon />
+               </IconButton>
+             </Tooltip>
+            </Grid>
+        </Grid>
+
       </Grid>
 
     </Grid>
 
     </Toolbar>
   );
+};
+
+TableToolbar.propTypes = {
+  handlOpenCreateDrawer: PropTypes.func
 };
 
 export default TableToolbar;

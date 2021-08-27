@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import {
   Hidden,
   Icon
 } from '@material-ui/core';
 import { Topbar } from '../components';
-import SERVICES from '../../util/webservices';
-import { history } from '../../helpers';
 import { UsersTable } from './components';
+import DB from '../../util/firebaseinit';
 
 
 const useStyles = makeStyles(theme => ({
   root: {
-
+    minHeight: '100vh',
+    maxWidth: '100%',
+    background: '#efefef'
   },
   body: {
-    paddingLeft: theme.spacing(6),
-    paddingRight: theme.spacing(6),
+    paddingLeft: theme.spacing(5),
+    paddingRight: theme.spacing(5),
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
     [theme.breakpoints.down('md')]: {
@@ -229,7 +230,17 @@ const Admins = () => {
       if(!loading) {
         setLoading(true);
 
-        SERVICES.get(`admin/all`)
+        DB.collection("admin").get().then((querySnapshot) => {
+          var arr = [];
+          querySnapshot.forEach((doc) => {
+              arr.push({"id": doc.id, "fullname": doc.data().fullname, "mobileNo": doc.data().phoneNumber, "email": doc.data().email, "role": doc.data().role});
+          });
+          setLoading(false);
+          setUsersList(arr);
+          setFilteredUsers(arr);
+        });
+
+      /*  SERVICES.get(`admin/all`)
         .then(response => {
              setLoading(false);
              setUsersList(response.data.data);
@@ -244,14 +255,14 @@ const Admins = () => {
             history.push('/');
           }
           console.log(errRes);
-        })
+        }) */
       }
     };
     handleUsersList();
   }, []);
 
 
-  const handleUsersList = () => {
+/*  const handleUsersList = () => {
     if(!loading) {
       setLoading(true);
 
@@ -273,7 +284,7 @@ const Admins = () => {
       })
     }
   }
-
+*/
   const handleFilter = query => {
     let newList = [];
     console.log(query);
@@ -287,7 +298,7 @@ const Admins = () => {
   return (
     <div className={classes.root}>
       <Hidden mdDown>
-        <Topbar title={'Users'} />
+        <Topbar title={'Administrators'} />
       </Hidden>
       <div className={classes.body}>
           {loading && <Icon className="fas fa-circle-notch fa-spin" style={{ color: '#2688FB', fontSize: 40, position: 'relative', top: 40, left: '50%', }} />}

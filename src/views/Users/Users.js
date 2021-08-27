@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import {
   Hidden,
   Icon
 } from '@material-ui/core';
 import { Topbar } from '../components';
-import SERVICES from '../../util/webservices';
-import { history } from '../../helpers';
+//import SERVICES from '../../util/webservices';
+//import { history } from '../../helpers';
 import { UsersTable } from './components';
-
+import DB from '../../util/firebaseinit';
 
 const useStyles = makeStyles(theme => ({
   root: {
-
+    minHeight: '100vh',
+    maxWidth: '100%',
+    background: '#efefef'
   },
   body: {
     paddingLeft: theme.spacing(6),
@@ -225,29 +227,32 @@ const Users = () => {
 
 
   useEffect(() => {
-    const handleUsersList = () => {
+  //  const handleUsersList = () => {
       if(!loading) {
         setLoading(true);
 
-        SERVICES.get(`user/all`)
-        .then(response => {
-             setLoading(false);
-             setUsersList(response.data.data);
-             setFilteredUsers(response.data.data);
-        })
-        .catch(function (error) {
+        DB.collection("users").get().then((querySnapshot) => {
+          var arr = [];
+          querySnapshot.forEach((doc) => {
+              arr.push({"id": doc.id, "fullname": doc.data().name, "mobileNo": doc.data().mobileNo, "email": doc.data().email});
+          });
+          console.log("USERS MAIN:" + JSON.stringify(arr));
           setLoading(false);
-          const errRes = error.response;
-          if(errRes.status === 401 && errRes.data.message === 'You dont have permission for this action') {
-            localStorage.removeItem('stansAdmin');
-            localStorage.removeItem('stansonlyadmin');
-            history.push('/');
-          }
-          console.log(errRes);
-        })
+          setUsersList(arr);
+          setFilteredUsers(arr);
+      });
+
+    /*  DB.collection("users").onSnapshot((querySnapshot) => {
+          var arr = [];
+          querySnapshot.forEach((doc) => {
+              arr.push({"id": doc.id, "fullname": doc.data().name, "mobileNo": doc.data().mobileNo, "email": doc.data().email});
+            });
+            console.log("USERS MAIN:" + JSON.stringify(arr));
+            setUsersList(arr);
+        }); */
       }
-    };
-    handleUsersList();
+  //  };
+  //  handleUsersList();
   }, []);
 
 
@@ -289,8 +294,11 @@ const Users = () => {
         <Topbar title={'Users'} />
       </Hidden>
       <div className={classes.body}>
-          {loading && <Icon className="fas fa-circle-notch fa-spin" style={{ color: '#2688FB', fontSize: 40, position: 'relative', top: 40, left: '50%', }} />}
-          <UsersTable usersList={filteredUsers} handleFilter={handleFilter} />
+          {loading ?
+            <Icon className="fas fa-circle-notch fa-spin" style={{ color: '#2688FB', fontSize: 40, position: 'relative', top: 40, left: '50%', }} />
+            :
+            <UsersTable usersList={filteredUsers} handleFilter={handleFilter} />
+          }
       </div>
 
     </div>

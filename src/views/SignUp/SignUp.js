@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { loadCSS } from 'fg-loadcss';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 import validate from 'validate.js';
-import { makeStyles } from '@material-ui/core/styles';
-import axios from 'axios';
+import { makeStyles } from '@material-ui/styles';
 import {
   Grid,
   Button,
@@ -23,24 +21,26 @@ import Collapse from '@material-ui/core/Collapse';
 import CloseIcon from '@material-ui/icons/Close';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import axios from 'axios';
 
 const schema = {
-  fullname: {
+  fullName: {
     presence: { allowEmpty: false, message: 'is required' },
     length: {
       minimum: 5,
-      maximum: 100
+      maximum: 100,
+      message: 'must be at least 5 characters'
     },
     format: {
      pattern: /^[a-zA-Z ]+$/,
      message: 'should only contain letters'
    }
   },
-  username: {
+  email: {
     presence: { allowEmpty: false, message: 'is required' },
+    email: true,
     length: {
-      minimum: 6,
-      maximum: 20
+      maximum: 150
     }
   },
   password: {
@@ -75,7 +75,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'flex-end',
-    backgroundImage: 'linear-gradient(0deg, rgba(0, 12, 25, 1), rgba(83, 92, 101, 0), rgba(85, 94, 103, 1)), url(/images/humphrey-muleba-unsplash.png)',
+    backgroundImage: 'linear-gradient(0deg, rgba(0, 12, 25, 1), rgba(83, 92, 101, 0), rgba(85, 94, 103, 1)), url(/images/start_image.jpg)',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
@@ -100,7 +100,10 @@ const useStyles = makeStyles(theme => ({
   content: {
     height: '100%',
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    background: 'linear-gradient(150deg, rgba(80, 86, 104, 1), rgba(80, 86, 104, 1), rgba(54, 58, 70, 0))',
+    backgroundRepeat: "no-repeat",
+    backgroundSize: 'cover'
   },
   contentHeader: {
     display: 'flex',
@@ -176,27 +179,22 @@ const useStyles = makeStyles(theme => ({
   policyCheckbox: {
     marginLeft: '-14px'
   },
-  signUpButton: {
-    margin: theme.spacing(2, 0),
+  buttonStyle: {
+    marginTop: theme.spacing(3),
     borderWidth: 1,
     borderStyle: 'solid',
     borderRadius: 70,
     borderColor: '#fff',
     textTransform: 'none',
     fontSize: 14,
+    minHeight: 50,
     fontWeight: 400,
     color: '#fff',
     font: 'Helvetica Neue',
-    WebkitBoxShadow: 'none',
-  	MozBoxShadow: 'none',
-  	boxShadow: 'none',
-    backgroundColor: '#2688FB',
+    backgroundColor: theme.palette.primary.main,
     '&:hover': {
-      backgroundColor: '#0573f0',
+      backgroundColor: theme.palette.primary.dark,
       color: "#fff",
-      WebkitBoxShadow: 'none',
-      MozBoxShadow: 'none',
-      boxShadow: 'none',
     }
   },
   input: {
@@ -231,60 +229,6 @@ const useStyles = makeStyles(theme => ({
     height: '100%',
     display: 'flex',
     flexDirection: 'column'
-  },
-  btnTwitter: {
-    color: '#1DA1F2',
-    backgroundColor: theme.palette.primary.contrastText,
-    borderColor: '#1DA1F2',
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderRadius: 70,
-    textTransform: 'none',
-    fontSize: 12,
-    padding: '10px 0px',
-    fontWeight: 400,
-    font: 'Helvetica Neue',
-    width: '100%',
-    '&:hover': {
-      backgroundColor: '#1DA1F2',
-      color: theme.palette.primary.contrastText,
-    },
-  },
-  btnFacebook: {
-    color: '#4267B2',
-    backgroundColor: theme.palette.primary.contrastText,
-    borderColor: '#4267B2',
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderRadius: 70,
-    textTransform: 'none',
-    fontSize: 12,
-    padding: '10px 0px',
-    fontWeight: 400,
-    font: 'Helvetica Neue',
-    width: '100%',
-    '&:hover': {
-      backgroundColor: '#4267B2',
-      color: theme.palette.primary.contrastText,
-    },
-  },
-  btnGoogle: {
-    color: '#4885ed',
-    backgroundColor: theme.palette.primary.contrastText,
-    borderColor: '#4885ed',
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderRadius: 70,
-    textTransform: 'none',
-    fontSize: 12,
-    padding: '10px 0px',
-    fontWeight: 400,
-    font: 'Helvetica Neue',
-    width: '100%',
-    '&:hover': {
-      backgroundColor: '#4885ed',
-      color: theme.palette.primary.contrastText,
-    },
   },
   dividerContainer: {
     marginTop: theme.spacing(1),
@@ -325,16 +269,34 @@ const useStyles = makeStyles(theme => ({
   already: {
     fontSize: 12,
     color: '#BFC9D5',
-    textAlign: 'center'
+    textAlign: 'center',
+    marginTop: 10
   },
   redirectLink: {
-    color: '#010E1C',
+    color: theme.palette.text.primary,
     fontSize: 13,
     textDecoration: 'none'
   },
   socialGrid: {
     marginTop: 10,
     marginBottom: 10
+  },
+  titleTextStyle: {
+    fontSize: '1.5rem',
+    color: theme.palette.text.primary,
+    fontWeight: 500,
+    [theme.breakpoints.down(375)]: {
+      fontSize: '1.25rem',
+      fontWeight: 500,
+    }
+  },
+  subTitle: {
+    marginBottom: 20,
+    fontSize: 13,
+    color: theme.palette.text.primary,
+    [theme.breakpoints.down(375)]: {
+        fontSize: 12,
+    }
   },
   subtitleSpacing: {
     marginBottom: 20,
@@ -352,14 +314,14 @@ const useStyles = makeStyles(theme => ({
       fontSize: '16px !important',
     }
   },
-  titleTextStyle: {
-    fontSize: '1.5rem',
-    color: '#04011D',
-    fontWeight: 500,
-    [theme.breakpoints.down(375)]: {
-      fontSize: '1.25rem',
-      fontWeight: 500,
-    }
+  inputStyle: {
+    padding: '7px 10px 7px 10px'
+  },
+  notchStyle: {
+    border: 'none'
+  },
+  inputRootStyle: {
+    paddingRight: 0
   }
 }));
 
@@ -376,7 +338,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 */
-const SignUp = props => {
+const SignUp = () => {
   const classes = useStyles();
   //let history = useHistory();
 
@@ -395,10 +357,6 @@ const SignUp = props => {
 //  const [socialLoading, setSocialLoading] = React.useState(false);
 
   useEffect(() => {
-    loadCSS(
-     'https://use.fontawesome.com/releases/v5.12.0/css/all.css',
-     document.querySelector('#font-awesome-css'),
-   );
 
     const errors = validate(formState.values, schema);
 
@@ -432,6 +390,37 @@ const SignUp = props => {
     setShowPassword(!showPassword);
   };
 
+  const handleSignUp = () => {
+    if(!loading) {
+      setLoading(true);
+
+      const obj = {
+          fullname: formState.values.fullName,
+          email: formState.values.email,
+          password: formState.values.password,
+          role: 0
+      };
+
+      axios.post('https://hotlogistixapi.herokuapp.com/admin/register', obj)
+      .then(response => {
+        setLoading(false);
+        const res = response;
+        console.log(res);
+        setSuccess(true);
+        /*if(res.status === "success") {
+
+        //  history.push('/signin');
+        } */
+      })
+      .catch(function (error) {
+        console.log(error);
+        setLoading(false);
+        const resError = error.response ? error.response.data.message : "Something went wrong please try again";
+        setServerError(resError);
+      })
+    }
+  }
+
 /*  const getReference = () => {
 		  let text = "";
 		  let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.=";
@@ -442,7 +431,7 @@ const SignUp = props => {
       return text;
 	 } */
 
-  const handleSignUp = () => {
+/*  const handleSignUp = () => {
 
     if(!loading) {
       setLoading(true);
@@ -477,6 +466,11 @@ const SignUp = props => {
   }
 
 
+{loading && <CircularProgress size={28} className={classes.buttonProgress} />}
+
+
+  <Collapse in={!success}>
+*/
 
   const hasError = field =>
     formState.touched[field] && formState.errors[field] ? true : false;
@@ -528,46 +522,46 @@ const SignUp = props => {
             <div className={classes.contentHeader}>
               <img
                 alt="Logo"
-                src="/images/Stansoly_new_blue.png"
-                height="60"
-                width="80"
+                src="/images/hotlogistix_logo_white.png"
+                height="80"
+                width="154"
               />
             </div>
             <div className={classes.contentBody}>
-            <Collapse in={success}>
-                  <MuiAlert
-                    severity="success"
-                    >
-                    <Typography
-                      color="textSecondary"
-                      gutterBottom
-                      component="h6"
-                      variant="h6"
-                    >
-                      Admin account has been successfully created.
-                    </Typography>
-                    <Typography variant="caption" color="textSecondary" component="span">
-
-                      Go right ahead and sign in to start performing admin services
-                    </Typography>
-                    <Typography
-                      color="textSecondary"
-                      variant="body2"
-                      className={classes.already}
-                    >
-                       Back to sign{'   '}
-                      <Link
-                        component={RouterLink}
-                        to="/signin"
-                        variant="h6"
-                        className={classes.redirectLink}
-
+              <Collapse in={success}>
+                    <MuiAlert
+                      severity="success"
                       >
-                        Sign in
-                      </Link>
-                    </Typography>
-                  </MuiAlert>
-              </Collapse>
+                      <Typography
+                        color="textSecondary"
+                        gutterBottom
+                        component="h6"
+                        variant="h6"
+                      >
+                        Admin account has been successfully created.
+                      </Typography>
+                      <Typography variant="caption" color="textSecondary" component="span">
+
+                        Go right ahead and sign in to start performing admin services
+                      </Typography>
+                      <Typography
+                        color="textSecondary"
+                        variant="body2"
+                        className={classes.already}
+                      >
+                         Back to sign{'   '}
+                        <Link
+                          component={RouterLink}
+                          to="/signin"
+                          variant="h6"
+                          className={classes.redirectLink}
+
+                        >
+                          Sign in
+                        </Link>
+                      </Typography>
+                    </MuiAlert>
+                </Collapse>
               <Collapse in={!success}>
                 <Paper className={classes.formPaper} elevation={1}>
                   <div className={classes.formBody}>
@@ -578,13 +572,13 @@ const SignUp = props => {
                       align="center"
                       className={classes.titleTextStyle}
                     >
-                      Welcome to Stansonly
+                      Welcome to Hotlogistix Admin
                     </Typography>
                     <Typography
                       variant="body2"
                       display="block"
                       gutterBottom
-                      className={classes.subtitleSpacing}
+                      className={classes.subTitle}
                       align="center"
                     >
                       Sign up to start performing admin services!
@@ -618,47 +612,57 @@ const SignUp = props => {
                         className={classes.form}
                         autoComplete="off"
                       >
-                      <InputLabel shrink htmlFor="fullname">
+                      <InputLabel shrink htmlFor="fullName">
                         Full name
                       </InputLabel>
-                      <FormControl error={hasError('fullname')} className={classes.formComponent}>
+                      <FormControl error={hasError('fullName')} className={classes.formComponent}>
                         <TextField
                             id="fullname-input"
                             className={classes.textField}
                             fullWidth
-                            name="fullname"
+                            name="fullName"
                             type="text"
                             onChange={handleChange}
                             InputProps={{
                               disableUnderline: true,
+                              marginDense: true,
+                              classes: {
+                                notchedOutline: classes.notchStyle,
+                                input: classes.inputStyle
+                              },
                               style: {fontSize: 12}
                             }}
                             aria-describedby="fullname-error"
                           />
                           <FormHelperText id="fullname-error" classes={{ error: classes.helper }}>
-                            {  hasError('fullname') ? formState.errors.fullname[0] : null }
+                            {  hasError('fullName') ? formState.errors.fullName[0] : null }
                           </FormHelperText>
                         </FormControl>
 
-                        <InputLabel shrink htmlFor="username">
-                          Username
+                        <InputLabel shrink htmlFor="email">
+                          Email
                         </InputLabel>
-                        <FormControl error={hasError('username')} className={classes.formComponent}>
+                        <FormControl error={hasError('email')} className={classes.formComponent}>
                           <TextField
-                              id="username-input"
+                              id="email-input"
                               className={classes.textField}
                               fullWidth
-                              name="username"
+                              name="email"
                               type="text"
                               onChange={handleChange}
                               InputProps={{
                                 disableUnderline: true,
+                                marginDense: true,
+                                classes: {
+                                  notchedOutline: classes.notchStyle,
+                                  input: classes.inputStyle
+                                },
                                 style: {fontSize: 12}
                               }}
-                              aria-describedby="username-error"
+                              aria-describedby="email-error"
                             />
-                            <FormHelperText id="username-error" classes={{ error: classes.helper }}>
-                              {  hasError('username') ? formState.errors.username[0] : null }
+                            <FormHelperText id="email-error" classes={{ error: classes.helper }}>
+                              {  hasError('email') ? formState.errors.email[0] : null }
                             </FormHelperText>
                         </FormControl>
                           <InputLabel shrink htmlFor="password">
@@ -674,12 +678,18 @@ const SignUp = props => {
                               <IconButton
                                 size='small'
                                 aria-label="toggle password visibility"
-                                onClick={e => handleClickShowPassword()}
+                                onClick={handleClickShowPassword}
                               >
-                                {showPassword ? <Visibility /> : <VisibilityOff />}
+                                {showPassword ? <Visibility fontSize="small" /> : <VisibilityOff fontSize="small" />}
                               </IconButton>
                             </InputAdornment>,
                               disableUnderline: true,
+                              marginDense: true,
+                              classes: {
+                                root: classes.inputRootStyle,
+                                notchedOutline: classes.notchStyle,
+                                input: classes.inputStyle
+                              },
                               style: {fontSize: 12}
                             }}
                             name="password"
@@ -692,16 +702,16 @@ const SignUp = props => {
                             </FormHelperText>
                         </FormControl>
                         <Button
-                          className={classes.signUpButton}
+                          className={classes.buttonStyle}
                           fullWidth
                           size="large"
                           type="button"
-                          onClick={handleSignUp}
                           variant="contained"
-                          disabled={ loading }
+                          onClick={handleSignUp}
+                          disabled={loading}
                         >
                           Sign Up
-                          {loading && <CircularProgress size={28} className={classes.buttonProgress} />}
+                          {loading && <CircularProgress size={20} className={classes.buttonProgress} />}
                         </Button>
 
                         <Typography
@@ -715,7 +725,6 @@ const SignUp = props => {
                             to="/signin"
                             variant="h6"
                             className={classes.redirectLink}
-
                           >
                             Sign in
                           </Link>

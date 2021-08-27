@@ -1,8 +1,12 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-
+import { makeStyles } from '@material-ui/styles';
+import FilterListIcon from '@material-ui/icons/FilterList';
+import {
+  Typography,
+  Tooltip,
+  Toolbar,
+  IconButton
+} from '@material-ui/core';
 
 const useToolbarStyles = makeStyles(theme => ({
   root: {
@@ -15,7 +19,7 @@ const useToolbarStyles = makeStyles(theme => ({
   },
 }));
 
-const TableToolbar = props => {
+const TableToolbar = () => {
   const classes = useToolbarStyles();
 
   return (
@@ -25,6 +29,11 @@ const TableToolbar = props => {
         <Typography className={classes.title} variant="h6" id="tableTitle">
           Users List
         </Typography>
+        <Tooltip title="Filter users">
+         <IconButton aria-label="filter users">
+           <FilterListIcon />
+         </IconButton>
+       </Tooltip>
     </Toolbar>
   );
 };

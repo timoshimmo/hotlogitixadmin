@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import {
   Hidden,
   Icon
@@ -8,7 +8,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import { Topbar } from '../components';
 import SERVICES from '../../util/webservices';
-import { history } from '../../helpers';
+//import { history } from '../../helpers';
 import { UsersTable } from './components';
 
 
@@ -242,12 +242,12 @@ const Withdrawals = () => {
         .catch(function (error) {
           setLoading(false);
           const errRes = error.response;
-          if(errRes.status === 401 && errRes.data.message === 'You dont have permission for this action') {
-            localStorage.removeItem('stansAdmin');
-            localStorage.removeItem('stansonlyadmin');
-            history.push('/');
-          }
-          setServerError("Erroe retrieving transaction list");
+        //  if(errRes.status === 401 && errRes.data.message === 'You dont have permission for this action') {
+          //  localStorage.removeItem('stansAdmin');
+          //  localStorage.removeItem('stansonlyadmin');
+          //  history.push('/');
+        //  }
+          setServerError("Error retrieving transaction list");
           console.log(errRes);
         })
       }

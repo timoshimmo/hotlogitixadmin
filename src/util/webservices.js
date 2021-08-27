@@ -6,7 +6,7 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   async config => {
-    let token = localStorage.getItem('stansonlyadmin');
+    let token = localStorage.getItem('stansonlytoken');
     config.headers = {
       'x-access-token': token
     }
@@ -16,19 +16,5 @@ instance.interceptors.request.use(
     Promise.reject(error)
 });
 
-/*
-
-let token = localStorage.getItem('stansonlytoken');
-let config = {};
-
-if(token != null) {
-  config = { 'x-access-token': token };
-}
-
-const instance = axios.create({
-    baseURL: `http://stansonlyapi.eu-west-1.elasticbeanstalk.com/`,
-    headers: config
-  });
-*/
 
 export default instance;

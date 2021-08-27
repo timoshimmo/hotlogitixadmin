@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme => ({
   content: {
     height: '100%',
     minHeight: '100%',
-    backgroundColor: '#F4F6F8'
+    backgroundColor: theme.palette.background.dark
   }
 }));
 
