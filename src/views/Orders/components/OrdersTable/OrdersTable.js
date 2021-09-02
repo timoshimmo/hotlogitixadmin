@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -125,6 +126,7 @@ const OrdersTable = props => {
   const { className, orderList, handleFilter, ...rest } = props;
 
   const classes = useStyles();
+  let history = useHistory();
 
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('dateOTransaction');
@@ -150,6 +152,18 @@ const OrdersTable = props => {
 
   const handleSearchChange = event => {
     handleFilter(event.target.value);
+  }
+
+  const handleOpenAssign = id => {
+
+    let selectedData = orderList.filter(datas => datas.id === id);
+
+    console.log("")
+
+    history.push({
+      pathname: '/assign',
+      state:{ data: selectedData }
+    });
   }
 
   const emptyRows =
@@ -199,7 +213,7 @@ const OrdersTable = props => {
                                            overflow="hidden"
                                            bgcolor="inherit"
                                          >
-                                            {row.from}
+                                            {row.pickup.address}
                                           </Box>
                                       </StyledTableCell>
                                       <StyledTableCell style={{ maxWidth: 150, whiteSpace: 'nowrap' }}>
@@ -210,7 +224,7 @@ const OrdersTable = props => {
                                            overflow="hidden"
                                            bgcolor="inherit"
                                          >
-                                           {row.to}
+                                           {row.delivery.address}
                                          </Box>
                                       </StyledTableCell>
                                       <StyledTableCell align="center">
@@ -226,7 +240,8 @@ const OrdersTable = props => {
                                         <Button
                                           variant="outlined"
                                           startIcon={<AddIcon style={{ fontSize: 14 }} />}
-                                          className={classes.buttonStyle}>
+                                          className={classes.buttonStyle}
+                                          onClick={()=>handleOpenAssign(row.id)}>
                                             Assign
                                         </Button>
                                       </StyledTableCell>

@@ -18,7 +18,9 @@ import {
     History as HistoryPage,
     ReportedCases as ReportedCasesPage,
     Admins as AdminsPage,
-    Dashboard as DashboardPage
+    Dashboard as DashboardPage,
+    Assign as AssignPage,
+    TripDetails as TripDetailsPage
 } from './views';
 
  const Routes = () => {
@@ -62,47 +64,62 @@ import {
                  path="/orders"
                />
 
-               <RouteWithLayout
-                  component={TripsPage}
-                  exact
-                  layout={MainLayout}
-                  path="/trips"
-                />
-
-                <RouteWithLayout
-                   component={HistoryPage}
-                   exact
-                   layout={MainLayout}
-                   path="/history"
-                 />
-
-              <RouteWithLayout
-                 component={WithdrawalsPage}
-                 exact
-                 layout={MainLayout}
-                 path="/withdrawals"
-               />
-
-               <RouteWithLayout
-                  component={ReportedCasesPage}
-                  exact
-                  layout={MainLayout}
-                  path="/cases"
-                />
-
-              <RouteWithLayout
-                 component={AdminsPage}
-                 exact
-                 layout={MainLayout}
-                 path="/admins"
-               />
              <RouteWithLayout
-                component={DashboardPage}
+                component={TripsPage}
                 exact
                 layout={MainLayout}
-                path="/dashboard"
+                path="/trips"
               />
-              <Redirect to="/signin" />
+
+              <RouteWithLayout
+                 component={HistoryPage}
+                 exact
+                 layout={MainLayout}
+                 path="/history"
+               />
+
+            <RouteWithLayout
+               component={WithdrawalsPage}
+               exact
+               layout={MainLayout}
+               path="/withdrawals"
+             />
+
+             <RouteWithLayout
+                component={ReportedCasesPage}
+                exact
+                layout={MainLayout}
+                path="/cases"
+              />
+
+            <RouteWithLayout
+               component={AdminsPage}
+               exact
+               layout={MainLayout}
+               path="/admins"
+             />
+           <RouteWithLayout
+              component={DashboardPage}
+              exact
+              layout={MainLayout}
+              path="/dashboard"
+            />
+
+          <RouteWithLayout
+             component={AssignPage}
+             exact
+             layout={MainLayout}
+             path="/assign"
+           />
+
+           <RouteWithLayout
+              component={TripDetailsPage}
+              exact
+              layout={MainLayout}
+              path="/trip"
+            />
+
+            <Redirect to="/signin" />
     </Switch>
   )
 

@@ -9,3 +9,5 @@ export { default as History } from './History';
 export { default as ReportedCases } from './ReportedCases';
 export { default as Admins } from './Admins';
 export { default as Dashboard } from './Dashboard';
+export { default as Assign } from './Assign';
+export { default as TripDetails } from './TripDetails';

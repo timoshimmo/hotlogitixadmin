@@ -469,29 +469,22 @@ profileBack: {
   width: '100%'
 },
 buttonStyle: {
-  textTransform: 'none',
+  marginTop: theme.spacing(1),
+  borderWidth: 1,
   borderStyle: 'solid',
   borderRadius: 70,
-  borderWidth: 1,
-  fontSize: 14,
-  fontWeight: 400,
-  font: 'Helvetica Neue',
-  WebkitBoxShadow: 'none',
-  MozBoxShadow: 'none',
-  boxShadow: 'none',
-  backgroundColor: '#2688FB',
   borderColor: '#fff',
+  textTransform: 'none',
+  fontSize: 14,
+  minHeight: 50,
+  fontWeight: 400,
   color: '#fff',
-  width: '100%',
-  paddingTop: 10,
-  paddingBottom: 10,
+  font: 'Helvetica Neue',
+  backgroundColor: theme.palette.primary.main,
   '&:hover': {
-     WebkitBoxShadow: 'none',
-     MozBoxShadow: 'none',
-     boxShadow: 'none',
-     backgroundColor: '#0573f0',
-     color: "#fff",
-   },
+    backgroundColor: theme.palette.primary.dark,
+    color: "#fff",
+  }
 },
 unSubscribeButtonStyle: {
   textTransform: 'none',
@@ -602,8 +595,6 @@ const RidersTable = props => {
   const [driverLicenses, setDriverLicenses] = useState({});
 
   const [serverError, setServerError] = useState(null);
-//  const [success, setSuccess] = useState(false);
-//  const [successMsg, setSuccessMsg] = useState('');
   const [failed, setFailed] = useState(false);
 
   const [formState, setFormState] = useState({
@@ -1119,7 +1110,7 @@ const RidersTable = props => {
                       <Typography variant="subtitle2" component="h6">
                         Last name
                       </Typography>
-                      <Typography variant="caption" component="span">{driverLicenses["idLasttName"]}</Typography>
+                      <Typography variant="caption" component="span">{driverLicenses["idLastName"]}</Typography>
                     </Grid>
                     <Grid item lg={6} style={{ marginTop: 10, textAlign: 'left' }}>
                         <Typography variant="subtitle2" component="h6">
@@ -1149,7 +1140,7 @@ const RidersTable = props => {
                     (<Grid container justify="flex-end" spacing={3} style={{ marginTop: 0 }}>
                       <Grid
                         item
-                        lg={3}
+                        lg={12}
                         className={classes.btnContainer}
                         >
                         <Button

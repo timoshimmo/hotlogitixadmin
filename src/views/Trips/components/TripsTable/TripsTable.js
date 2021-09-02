@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { withStyles, makeStyles } from '@material-ui/styles';
@@ -19,7 +20,7 @@ import {
 } from '@material-ui/core';
 import { TableToolbar, TableHeader, TripsToolbar } from './components';
 import NumberFormat from 'react-number-format';
-import MapOutlinedIcon from '@material-ui/icons/MapOutlined';
+import VisibilityOutlinedIcon from '@material-ui/icons/VisibilityOutlined';
 
 const StyledTableCell = withStyles(() => ({
   head: {
@@ -125,6 +126,7 @@ const TripsTable = props => {
   const { className, tripList, handleFilter, ...rest } = props;
 
   const classes = useStyles();
+  let history = useHistory();
 
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('dateOTransaction');
@@ -155,6 +157,18 @@ const TripsTable = props => {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tripList.length) : 0;
 
+  const handleOpenTripDetails = id => {
+
+      let selectedData = tripList.filter(datas => datas.id === id);
+
+      console.log("")
+
+      history.push({
+        pathname: '/trip',
+        state:{ data: selectedData }
+      });
+    }
+
   return (
 
       <div
@@ -184,7 +198,6 @@ const TripsTable = props => {
                             .map((row) => {
                                   return (
                                     <StyledTableRow
-                                       hover
                                        tabIndex={-1}
                                        key={row.id}
                                      >
@@ -199,7 +212,7 @@ const TripsTable = props => {
                                            overflow="hidden"
                                            bgcolor="inherit"
                                          >
-                                            {row.from}
+                                            {row.pickup.address}
                                           </Box>
                                       </StyledTableCell>
                                       <StyledTableCell style={{ maxWidth: 150, whiteSpace: 'nowrap' }}>
@@ -210,7 +223,7 @@ const TripsTable = props => {
                                            overflow="hidden"
                                            bgcolor="inherit"
                                          >
-                                           {row.to}
+                                           {row.delivery.address}
                                          </Box>
                                       </StyledTableCell>
                                       <StyledTableCell align="center">
@@ -225,8 +238,10 @@ const TripsTable = props => {
                                       <StyledTableCell align="center">
                                         <Button
                                           variant="outlined"
-                                          startIcon={<MapOutlinedIcon style={{ fontSize: 14 }} />}
-                                          className={classes.buttonStyle}>
+                                          startIcon={<VisibilityOutlinedIcon style={{ fontSize: 14 }} />}
+                                          className={classes.buttonStyle}
+                                          onClick={()=>handleOpenTripDetails(row.id)}
+                                          >
                                             View
                                         </Button>
                                       </StyledTableCell>

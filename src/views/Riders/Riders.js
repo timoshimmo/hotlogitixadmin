@@ -242,6 +242,9 @@ const Users = () => {
           setLoading(false);
           setUsersList(arr);
           setFilteredUsers(arr);
+      },
+      (error) => {
+          console.log("Error retrieving riders list:", error);
       });
     }
   }, []);

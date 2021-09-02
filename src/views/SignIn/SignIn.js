@@ -643,7 +643,6 @@ const SignIn = () => {
        // Signed in
        setLoading(false);
        const user = userCredential.user;
-       console.log("admin-id:", user.uid);
        DB.collection("admin").doc(user.uid).get().then((doc) => {
          if (doc.exists) {
            console.log("Document data:", doc.data());
