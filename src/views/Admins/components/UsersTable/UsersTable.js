@@ -23,7 +23,6 @@ import {
   Typography,
   Button,
   Drawer,
-  Grid,
   Chip
 } from '@material-ui/core';
 import { TableToolbar, TableHeader, UsersToolbar } from './components';
@@ -31,9 +30,10 @@ import SERVICES from '../../../../util/webservices';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
-import axios from 'axios';
+import Collapse from '@material-ui/core/Collapse';
+import CloseIcon from '@material-ui/icons/Close';
+//import axios from 'axios';
 
 const StyledTableCell = withStyles(() => ({
   head: {
@@ -85,11 +85,8 @@ function stableSort(array, comparator) {
   return stabilizedThis.map(el => el[0]);
 }
 
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
-const schema = {
+/*const schema = {
   fullname: {
     presence: { allowEmpty: false, message: 'is required' },
     length: {
@@ -130,10 +127,10 @@ const schema = {
     equality: "newPassword"
   }
 
-};
+}; */
 
 const addschema = {
-  fullname: {
+  fullName: {
     presence: { allowEmpty: false, message: 'is required' },
     length: {
       minimum: 5,
@@ -144,10 +141,16 @@ const addschema = {
      message: 'should only contain letters'
    }
   },
-  username: {
+  email: {
+    presence: { allowEmpty: false, message: 'is required' },
+    email: true,
+    length: {
+      maximum: 150
+    }
+  },
+  phoneNo: {
     presence: { allowEmpty: false, message: 'is required' },
     length: {
-      minimum: 6,
       maximum: 20
     }
   },
@@ -228,22 +231,7 @@ textField: {
   width: '100%',
   borderRadius: '70px',
   transition: theme.transitions.create(['background-color']),
-  padding: '10px 20px',
-  '&$focused': {
-    backgroundrColor: '#F2F6FC',
-  },
-  '&:hover': {
-   backgroundColor: '#F2F6FC',
- },
-},
-textArea: {
-  position: 'relative',
-  backgroundColor: '#F2F4F7',
-  border: '1px solid #fff',
-  width: '100%',
-  borderRadius: '10px',
-  transition: theme.transitions.create(['background-color']),
-  padding: '10px 20px',
+  padding: '5px 10px',
   '&$focused': {
     backgroundrColor: '#F2F6FC',
   },
@@ -324,26 +312,22 @@ profileBack: {
   width: '100%'
 },
 buttonStyle: {
-  textTransform: 'none',
+  marginTop: theme.spacing(1),
+  borderWidth: 1,
   borderStyle: 'solid',
   borderRadius: 70,
-  borderWidth: 1,
-  fontSize: 14,
-  fontWeight: 400,
-  font: 'Helvetica Neue',
-  WebkitBoxShadow: 'none',
-  MozBoxShadow: 'none',
-  boxShadow: 'none',
-  backgroundColor: '#2688FB',
   borderColor: '#fff',
+  textTransform: 'none',
+  fontSize: 14,
+  minHeight: 50,
+  fontWeight: 400,
   color: '#fff',
+  font: 'Helvetica Neue',
+  backgroundColor: theme.palette.primary.main,
   '&:hover': {
-     WebkitBoxShadow: 'none',
-     MozBoxShadow: 'none',
-     boxShadow: 'none',
-     backgroundColor: '#0573f0',
-     color: "#fff",
-   },
+    backgroundColor: theme.palette.primary.dark,
+    color: "#fff",
+  }
 },
 unSubscribeButtonStyle: {
   textTransform: 'none',
@@ -384,9 +368,194 @@ superAdminLabelStyle: {
   color: '#ff3d00',
   fontSize: 11
 },
+inputStyle: {
+  padding: '7px 10px 7px 10px'
+},
+notchStyle: {
+  border: 'none'
+},
 }));
 
 /*
+<Drawer anchor="right" open={toggleDrawer} onClose={handleCloseDrawer}>
+    <div className={classes.formRoot} style={{ paddingBottom: 20, paddingTop: 20}}>
+
+      <form className={classes.form} autoComplete="off">
+        <div className={classes.popTitle}>
+            <Typography variant="h6">Admin Details</Typography>
+        </div>
+        <div className={classes.formArea}>
+          <InputLabel shrink htmlFor="fullname">
+            Fullname
+          </InputLabel>
+          <FormControl error={hasError('fullname')} className={classes.formComponent}>
+            <TextField
+                id="fullname-input"
+                className={classes.textField}
+                fullWidth
+                name="fullname"
+                type="text"
+                onChange={handleChange}
+                defaultValue={formState.values.fullname}
+                InputProps={{
+                  disableunderline: "true",
+                  classes: {
+                    notchedOutline: classes.notchStyle,
+                    input: classes.inputStyle
+                  },
+                  style: {fontSize: 12}
+                }}
+                aria-describedby="fullname-error"
+              />
+              <FormHelperText id="fullname-error" classes={{ error: classes.helper }}>
+                {  hasError('fullname') ? formState.errors.fullname[0] : null }
+              </FormHelperText>
+          </FormControl>
+
+          <InputLabel shrink htmlFor="username">
+            Username
+          </InputLabel>
+          <FormControl error={hasError('username')} className={classes.formComponent}>
+            <TextField
+                id="username-input"
+                className={classes.textField}
+                fullWidth
+                name="username"
+                type="text"
+                onChange={handleChange}
+                defaultValue={formState.values.username}
+                InputProps={{
+                  disableunderline: "true",
+                  classes: {
+                    notchedOutline: classes.notchStyle,
+                    input: classes.inputStyle
+                  },
+                  style: {fontSize: 12}
+                }}
+                aria-describedby="username-error"
+              />
+              <FormHelperText id="username-error" classes={{ error: classes.helper }}>
+                {  hasError('username') ? formState.errors.username[0] : null }
+              </FormHelperText>
+          </FormControl>
+        </div>
+        <Grid container>
+           <Grid
+             item
+             lg={12}
+             style={{ textAlign: "right", paddingLeft: 25, paddingRight: 25, paddingTop: 10, paddingBottom: 30 }}
+             >
+             <Button
+               variant="contained"
+               className={classes.buttonStyle}
+               disabled={ updateLoading || !formState.values.fullname || !formState.values.username }
+               onClick={handleUpdateAdmin}
+               >
+               Save
+               {updateLoading && <CircularProgress size={20} className={classes.buttonSaveProgress} />}
+             </Button>
+
+           </Grid>
+         </Grid>
+
+         <div className={classes.formArea}>
+
+          <div className={classes.popTitle}>
+              <Typography variant="h6">Change Admin Password</Typography>
+          </div>
+          <InputLabel shrink htmlFor="newPassword">
+            New Password
+          </InputLabel>
+          <FormControl error={hasError('newPassword')} className={classes.formComponent}>
+            <TextField
+                id="newpassword-input"
+                className={classes.textField}
+                fullWidth
+                name="newPassword"
+                type={showNewPassword ? "text" : "password"}
+                onChange={handleChange}
+                InputProps={{
+                  endAdornment: <InputAdornment position="end">
+                  <IconButton
+                    size='small'
+                    aria-label="toggle new password visibility"
+                    onClick={handleClickShowNewPassword}
+                  >
+                    {showNewPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>,
+                  disableunderline: "true",
+                  classes: {
+                    notchedOutline: classes.notchStyle,
+                    input: classes.inputStyle
+                  },
+                  style: {fontSize: 12}
+                }}
+                aria-describedby="newpassword-error"
+              />
+              <FormHelperText id="newpassword-error" classes={{ error: classes.helper }}>
+                {  hasError('newPassword') ? formState.errors.newPassword[0] : null }
+              </FormHelperText>
+          </FormControl>
+
+          <InputLabel shrink htmlFor="confirmPassword">
+            Confirm Password
+          </InputLabel>
+          <FormControl error={hasError('confirmPassword')} className={classes.formComponent}>
+            <TextField
+                id="confirmpassword-input"
+                className={classes.textField}
+                fullWidth
+                name="confirmPassword"
+                type={showConfirmPassword ? "text" : "password"}
+                onChange={handleChange}
+                InputProps={{
+                  endAdornment: <InputAdornment position="end">
+                  <IconButton
+                    size='small'
+                    aria-label="toggle confirm password visibility"
+                    onClick={handleClickShowConfirmPassword}
+                  >
+                    {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>,
+                  disableunderline: "true",
+                  classes: {
+                    notchedOutline: classes.notchStyle,
+                    input: classes.inputStyle
+                  },
+                  style: {fontSize: 12}
+                }}
+                aria-describedby="confirmpassword-error"
+              />
+              <FormHelperText id="confirmpassword-error" classes={{ error: classes.helper }}>
+                {  hasError('confirmPassword') ? formState.errors.confirmPassword[0] : null }
+              </FormHelperText>
+          </FormControl>
+        </div>
+      </form>
+      <Grid container>
+         <Grid
+           item
+           lg={12}
+           style={{ textAlign: "right", paddingLeft: 25, paddingRight: 25, paddingTop: 10, paddingBottom: 40 }}
+           >
+           <Button
+             variant="contained"
+             className={classes.buttonStyle}
+             disabled={ loading || !formState.values.newPassword || !formState.values.confirmPassword || hasError('confirmPassword') }
+             onClick={handleSavePassword}
+             >
+             Save Password
+             {loading && <CircularProgress size={20} className={classes.buttonSaveProgress} />}
+           </Button>
+
+         </Grid>
+       </Grid>
+    </div>
+</Drawer>
+
+
 <Grid container justify="flex-right" spacing={3}>
   <Grid
     item
@@ -438,28 +607,28 @@ const UsersTable = props => {
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [page, setPage] = useState(0);
 //  const [suspendLoading, setSuspendLoading] = useState(false);
-  const [toggleDrawer, setToggleDrawer] = useState();
+//  const [toggleDrawer, setToggleDrawer] = useState();
 
   const [toggleCreateDrawer, setToggleCreateDrawer] = useState();
-  const [loading, setLoading] = useState(false);
-  const [updateLoading, setUpdateLoading] = useState(false);
-  const [userID, setUserID] = useState('');
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  //const [loading, setLoading] = useState(false);
+//  const [updateLoading, setUpdateLoading] = useState(false);
+//  const [userID, setUserID] = useState('');
+  //const [showNewPassword, setShowNewPassword] = useState(false);
+//  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [serverError, setServerError] = useState(null);
-  const [success, setSuccess] = useState(false);
-  const [successMsg, setSuccessMsg] = useState('');
+//  const [success, setSuccess] = useState(false);
+//  const [successMsg, setSuccessMsg] = useState('');
   const [failed, setFailed] = useState(false);
   const [addLoading, setAddLoading] = useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
 
-  const [formState, setFormState] = useState({
+  /*const [formState, setFormState] = useState({
     isValid: false,
     values: {},
     touched: {},
     errors: {}
-  });
+  }); */
 
   const [addFormState, setAddFormState] = useState({
     isValid: false,
@@ -469,14 +638,14 @@ const UsersTable = props => {
   });
 
   useEffect(() => {
-    const errors = validate(formState.values, schema);
+  //  const errors = validate(formState.values, schema);
     const addErrors = validate(addFormState.values, addschema);
 
-    setFormState(formState => ({
+  /*  setFormState(formState => ({
       ...formState,
       isValid: errors ? false : true,
       errors: errors || {}
-    }));
+    })); */
 
     setAddFormState(addFormState => ({
       ...addFormState,
@@ -484,7 +653,7 @@ const UsersTable = props => {
       errors: addErrors || {}
     }));
 
-}, [formState.values, addFormState.values]);
+}, [addFormState.values]);
 
 
   const handleRequestSort = (event, property) => {
@@ -493,7 +662,7 @@ const UsersTable = props => {
     setOrderBy(property);
   };
 
-  const handleCloseDrawer = () => {
+/*  const handleCloseDrawer = () => {
     setToggleDrawer(false);
   }
 
@@ -513,7 +682,7 @@ const UsersTable = props => {
     }));
       setUserID(id);
   }
-
+*/
   const handleCloseCreateDrawer = () => {
     setToggleCreateDrawer(false);
   }
@@ -523,7 +692,7 @@ const UsersTable = props => {
 
   }
 
-  const handleChange = event => {
+/*  const handleChange = event => {
   event.persist();
 
   setFormState(formState => ({
@@ -538,10 +707,10 @@ const UsersTable = props => {
     }
   }));
 
-};
+}; */
 
 const handleAddChange = event => {
-  event.persist();
+  //event.persist();
 
   setAddFormState(addFormState => ({
     ...addFormState,
@@ -557,13 +726,13 @@ const handleAddChange = event => {
 
 };
 
-const handleClickShowNewPassword = () => {
+/*const handleClickShowNewPassword = () => {
   setShowNewPassword(!showNewPassword);
 };
 
 const handleClickShowConfirmPassword = () => {
   setShowConfirmPassword(!showConfirmPassword);
-};
+}; */
 
 const handleClickShowPassword = () => {
   setShowPassword(!showPassword);
@@ -582,7 +751,7 @@ const handleClickShowPassword = () => {
     handleFilter(event.target.value);
   }
 
-  const handleSavePassword = event => {
+/*  const handleSavePassword = event => {
   event.preventDefault();
 
   setLoading(true);
@@ -643,56 +812,36 @@ const handleUpdateAdmin = event => {
   })
 
 }
-
+*/
 const handleSignUp = () => {
 
   if(!addLoading) {
     setAddLoading(true);
 
     const obj = {
-        fullname: addFormState.values.fullname,
-        username: addFormState.values.username,
+        fullname: addFormState.values.fullName,
+        email: addFormState.values.email,
         password: addFormState.values.password,
+        phoneNo: addFormState.values.phoneNo,
+        role: 0
     };
 
-    axios.post('https://api.stansonly.com/admin/register', obj)
+    SERVICES.post(`admin/register`, obj)
     .then(response => {
-      setAddLoading(false);
-      const res = response.data;
-      console.log(res);
-      if(res.status === "success") {
-        setSuccessMsg('New admin created');
-        setSuccess(true);
+      console.log(response);
+        setAddLoading(false);
         setToggleCreateDrawer(false);
         window.location.reload(true);
-      //  history.push('/signin');
-      }
     })
     .catch(function (error) {
-      console.log(error.response);
-      setAddLoading(false);
-      const resError = error.response ? error.response.data.message : "Something went wrong please try again";
-      setServerError(resError);
-      setFailed(true);
+        setAddLoading(false);
+        const resError = error.response ? error.response.data.message : "Something went wrong please try again";
+        setServerError(resError);
+        setFailed(true);
     })
   }
 }
 
-const handleSuccess = (event, reason) => {
-  if (reason === 'clickaway') {
-    return;
-  }
-
-  setSuccess(false);
-};
-
-const handleFailed = (event, reason) => {
-  if (reason === 'clickaway') {
-    return;
-  }
-
-  setFailed(false);
-};
 
 /*  const handleSuspend = () => {
     if(!suspendLoading) {
@@ -746,8 +895,8 @@ const handleFailed = (event, reason) => {
     }
   }
 */
-  const hasError = field =>
-    formState.touched[field] && formState.errors[field] ? true : false;
+/*  const hasError = field =>
+    formState.touched[field] && formState.errors[field] ? true : false; */
 
   const hasAddError = field =>
     addFormState.touched[field] && addFormState.errors[field] ? true : false;
@@ -786,7 +935,6 @@ const handleFailed = (event, reason) => {
                                        hover
                                        tabIndex={-1}
                                        key={row.id}
-                                       onClick={()=>handlOpenDrawer(row.id)}
                                      >
                                       <StyledTableCell component="th" id={row.id} scope="row">
                                         {row.fullname}
@@ -843,216 +991,108 @@ const handleFailed = (event, reason) => {
             />
         </CardActions>
         </Card>
-        <Drawer anchor="right" open={toggleDrawer} onClose={handleCloseDrawer}>
-            <div className={classes.formRoot} style={{ paddingBottom: 20, paddingTop: 20}}>
-
-              <form className={classes.form} autoComplete="off">
-                <div className={classes.popTitle}>
-                    <Typography variant="h6">Admin Details</Typography>
-                </div>
-                <div className={classes.formArea}>
-                  <InputLabel shrink htmlFor="fullname">
-                    Fullname
-                  </InputLabel>
-                  <FormControl error={hasError('fullname')} className={classes.formComponent}>
-                    <TextField
-                        id="fullname-input"
-                        className={classes.textField}
-                        fullWidth
-                        name="fullname"
-                        type="text"
-                        onChange={handleChange}
-                        defaultValue={formState.values.fullname}
-                        InputProps={{
-                          disableUnderline: true,
-                          style: {fontSize: 14}
-                        }}
-                        aria-describedby="fullname-error"
-                      />
-                      <FormHelperText id="fullname-error" classes={{ error: classes.helper }}>
-                        {  hasError('fullname') ? formState.errors.fullname[0] : null }
-                      </FormHelperText>
-                  </FormControl>
-
-                  <InputLabel shrink htmlFor="username">
-                    Username
-                  </InputLabel>
-                  <FormControl error={hasError('username')} className={classes.formComponent}>
-                    <TextField
-                        id="username-input"
-                        className={classes.textField}
-                        fullWidth
-                        name="username"
-                        type="text"
-                        onChange={handleChange}
-                        defaultValue={formState.values.username}
-                        InputProps={{
-                          disableUnderline: true,
-                          style: {fontSize: 14}
-                        }}
-                        aria-describedby="username-error"
-                      />
-                      <FormHelperText id="username-error" classes={{ error: classes.helper }}>
-                        {  hasError('username') ? formState.errors.username[0] : null }
-                      </FormHelperText>
-                  </FormControl>
-                </div>
-                <Grid container>
-                   <Grid
-                     item
-                     lg={12}
-                     style={{ textAlign: "right", paddingLeft: 25, paddingRight: 25, paddingTop: 10, paddingBottom: 30 }}
-                     >
-                     <Button
-                       variant="contained"
-                       className={classes.buttonStyle}
-                       disabled={ updateLoading || !formState.values.fullname || !formState.values.username }
-                       onClick={handleUpdateAdmin}
-                       >
-                       Save
-                       {updateLoading && <CircularProgress size={20} className={classes.buttonSaveProgress} />}
-                     </Button>
-
-                   </Grid>
-                 </Grid>
-
-                 <div className={classes.formArea}>
-
-                  <div className={classes.popTitle}>
-                      <Typography variant="h6">Change Admin Password</Typography>
-                  </div>
-                  <InputLabel shrink htmlFor="newPassword">
-                    New Password
-                  </InputLabel>
-                  <FormControl error={hasError('newPassword')} className={classes.formComponent}>
-                    <TextField
-                        id="newpassword-input"
-                        className={classes.textField}
-                        fullWidth
-                        name="newPassword"
-                        type={showNewPassword ? "text" : "password"}
-                        onChange={handleChange}
-                        InputProps={{
-                          endAdornment: <InputAdornment position="end">
-                          <IconButton
-                            size='small'
-                            aria-label="toggle new password visibility"
-                            onClick={handleClickShowNewPassword}
-                          >
-                            {showNewPassword ? <Visibility /> : <VisibilityOff />}
-                          </IconButton>
-                        </InputAdornment>,
-                          disableUnderline: true,
-                          style: {fontSize: 14}
-                        }}
-                        aria-describedby="newpassword-error"
-                      />
-                      <FormHelperText id="newpassword-error" classes={{ error: classes.helper }}>
-                        {  hasError('newPassword') ? formState.errors.newPassword[0] : null }
-                      </FormHelperText>
-                  </FormControl>
-
-                  <InputLabel shrink htmlFor="confirmPassword">
-                    Confirm Password
-                  </InputLabel>
-                  <FormControl error={hasError('confirmPassword')} className={classes.formComponent}>
-                    <TextField
-                        id="confirmpassword-input"
-                        className={classes.textField}
-                        fullWidth
-                        name="confirmPassword"
-                        type={showConfirmPassword ? "text" : "password"}
-                        onChange={handleChange}
-                        InputProps={{
-                          endAdornment: <InputAdornment position="end">
-                          <IconButton
-                            size='small'
-                            aria-label="toggle confirm password visibility"
-                            onClick={handleClickShowConfirmPassword}
-                          >
-                            {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
-                          </IconButton>
-                        </InputAdornment>,
-                          disableUnderline: true,
-                          style: {fontSize: 14}
-                        }}
-                        aria-describedby="confirmpassword-error"
-                      />
-                      <FormHelperText id="confirmpassword-error" classes={{ error: classes.helper }}>
-                        {  hasError('confirmPassword') ? formState.errors.confirmPassword[0] : null }
-                      </FormHelperText>
-                  </FormControl>
-                </div>
-              </form>
-              <Grid container>
-                 <Grid
-                   item
-                   lg={12}
-                   style={{ textAlign: "right", paddingLeft: 25, paddingRight: 25, paddingTop: 10, paddingBottom: 40 }}
-                   >
-                   <Button
-                     variant="contained"
-                     className={classes.buttonStyle}
-                     disabled={ loading || !formState.values.newPassword || !formState.values.confirmPassword || hasError('confirmPassword') }
-                     onClick={handleSavePassword}
-                     >
-                     Save Password
-                     {loading && <CircularProgress size={20} className={classes.buttonSaveProgress} />}
-                   </Button>
-
-                 </Grid>
-               </Grid>
-            </div>
-        </Drawer>
 
         <Drawer anchor="right" open={toggleCreateDrawer} onClose={handleCloseCreateDrawer}>
           <div className={classes.formRoot} style={{ paddingBottom: 20, paddingTop: 20}}>
+            <Collapse in={failed}>
+              <MuiAlert
+                severity="error"
+                action={
+                   <IconButton
+                     aria-label="close"
+                     color="inherit"
+                     size="small"
+                     onClick={() => {
+                       setFailed(false);
+                     }}
+                   >
+                     <CloseIcon fontSize="inherit" />
+                   </IconButton>
+                 }
+                >
+                {serverError}
+             </MuiAlert>
+          </Collapse>
             <form className={classes.form} autoComplete="off">
               <div className={classes.popTitle}>
                   <Typography variant="h6">Create Admin User</Typography>
               </div>
               <div className={classes.formArea}>
-                <InputLabel shrink htmlFor="fullname">
+                <InputLabel shrink htmlFor="fullName">
                   Full name
                 </InputLabel>
-                <FormControl error={hasAddError('fullname')} className={classes.formComponent}>
+                <FormControl error={hasAddError('fullName')} className={classes.formComponent}>
                   <TextField
                       id="fullname-input"
                       className={classes.textField}
                       fullWidth
-                      name="fullname"
+                      name="fullName"
                       type="text"
                       onChange={handleAddChange}
                       InputProps={{
-                        disableUnderline: true,
+                        disableunderline: "true",
+                        classes: {
+                          notchedOutline: classes.notchStyle,
+                          input: classes.inputStyle
+                        },
                         style: {fontSize: 12}
                       }}
                       aria-describedby="fullname-error"
                     />
                     <FormHelperText id="fullname-error" classes={{ error: classes.helper }}>
-                      {  hasAddError('fullname') ? addFormState.errors.fullname[0] : null }
+                      {  hasAddError('fullName') ? addFormState.errors.fullName[0] : null }
                     </FormHelperText>
                   </FormControl>
 
                   <InputLabel shrink htmlFor="username">
-                    Username
+                    Email
                   </InputLabel>
                   <FormControl error={hasAddError('username')} className={classes.formComponent}>
                     <TextField
-                        id="username-input"
+                        id="email-input"
                         className={classes.textField}
                         fullWidth
-                        name="username"
+                        name="email"
                         type="text"
                         onChange={handleAddChange}
                         InputProps={{
                           disableUnderline: true,
+                          marginDense: true,
+                          classes: {
+                            notchedOutline: classes.notchStyle,
+                            input: classes.inputStyle
+                          },
                           style: {fontSize: 12}
                         }}
-                        aria-describedby="username-error"
+                        aria-describedby="email-error"
                       />
-                      <FormHelperText id="username-error" classes={{ error: classes.helper }}>
-                        {  hasAddError('username') ? addFormState.errors.username[0] : null }
+                      <FormHelperText id="email-error" classes={{ error: classes.helper }}>
+                        {  hasAddError('email') ? addFormState.errors.email[0] : null }
+                      </FormHelperText>
+                  </FormControl>
+                  <InputLabel shrink htmlFor="phoneno">
+                    Phone No.
+                  </InputLabel>
+                  <FormControl error={hasAddError('phoneNo')} className={classes.formComponent}>
+                    <TextField
+                        id="phoneno-input"
+                        className={classes.textField}
+                        fullWidth
+                        name="phoneNo"
+                        type="text"
+                        onChange={handleAddChange}
+                        InputProps={{
+                          disableunderline: "true",
+                          classes: {
+                            notchedOutline: classes.notchStyle,
+                            input: classes.inputStyle
+                          },
+                          style: {fontSize: 12}
+                        }}
+                        aria-describedby="phoneno-error"
+                      />
+                      <FormHelperText id="phoneno-error" classes={{ error: classes.helper }}>
+                        {  hasAddError('phoneNo') ? addFormState.errors.phoneNo[0] : null }
                       </FormHelperText>
                   </FormControl>
                     <InputLabel shrink htmlFor="password">
@@ -1073,8 +1113,12 @@ const handleFailed = (event, reason) => {
                           {showPassword ? <Visibility /> : <VisibilityOff />}
                         </IconButton>
                       </InputAdornment>,
-                        disableUnderline: true,
-                        style: {fontSize: 12}
+                      disableunderline: "true",
+                      classes: {
+                        notchedOutline: classes.notchStyle,
+                        input: classes.inputStyle
+                      },
+                      style: {fontSize: 12}
                       }}
                       name="password"
                       onChange={handleAddChange}
@@ -1094,7 +1138,7 @@ const handleFailed = (event, reason) => {
                     variant="contained"
                     disabled={ addLoading }
                   >
-                    Sign Up
+                    Create Admin
                     {addLoading && <CircularProgress size={20} className={classes.buttonSaveProgress} />}
                   </Button>
               </div>
@@ -1102,17 +1146,6 @@ const handleFailed = (event, reason) => {
           </div>
         </Drawer>
 
-        <Snackbar open={success} autoHideDuration={2000} onClose={handleSuccess}>
-          <Alert onClose={handleSuccess} severity="success">
-            {successMsg}
-         </Alert>
-        </Snackbar>
-
-        <Snackbar open={failed} autoHideDuration={2000} onClose={handleFailed}>
-          <Alert onClose={handleFailed} severity="error">
-            {serverError}
-         </Alert>
-        </Snackbar>
       </div>
   );
 }

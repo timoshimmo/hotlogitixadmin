@@ -20,7 +20,8 @@ import {
     Admins as AdminsPage,
     Dashboard as DashboardPage,
     Assign as AssignPage,
-    TripDetails as TripDetailsPage
+    TripDetails as TripDetailsPage,
+    HistoryDetails as HistoryDetailsPage
 } from './views';
 
  const Routes = () => {
@@ -112,14 +113,21 @@ import {
              path="/assign"
            />
 
-           <RouteWithLayout
-              component={TripDetailsPage}
-              exact
-              layout={MainLayout}
-              path="/trip"
-            />
+         <RouteWithLayout
+            component={TripDetailsPage}
+            exact
+            layout={MainLayout}
+            path="/trip/details"
+          />
 
-            <Redirect to="/signin" />
+         <RouteWithLayout
+            component={HistoryDetailsPage}
+            exact
+            layout={MainLayout}
+            path="/history/details"
+          />
+
+        <Redirect to="/signin" />
     </Switch>
   )
 

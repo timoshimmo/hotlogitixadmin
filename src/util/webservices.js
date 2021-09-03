@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: `https://api.stansonly.com/`
+  baseURL: `https://hotlogistixapi.herokuapp.com/`
 });
 
 instance.interceptors.request.use(

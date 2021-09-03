@@ -641,15 +641,16 @@ const SignIn = () => {
       firebase.auth().signInWithEmailAndPassword(email, password)
      .then((userCredential) => {
        // Signed in
-       setLoading(false);
        const user = userCredential.user;
        DB.collection("admin").doc(user.uid).get().then((doc) => {
          if (doc.exists) {
+            setLoading(false);
            console.log("Document data:", doc.data());
             localStorage.setItem('hotlgtxAdminUser', JSON.stringify({ name: doc.data().fullname, userid: user.uid, role: doc.data().role }));
             history.push('/dashboard');
 
          } else {
+            setLoading(false);
              setServerError("User not found!");
              setOpen(true);
          }

@@ -11,3 +11,4 @@ export { default as Admins } from './Admins';
 export { default as Dashboard } from './Dashboard';
 export { default as Assign } from './Assign';
 export { default as TripDetails } from './TripDetails';
+export { default as HistoryDetails } from './HistoryDetails';

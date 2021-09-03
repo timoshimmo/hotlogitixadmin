@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 /*global google*/
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -16,20 +15,15 @@ import {
   TextField,
   Avatar,
   Chip,
-  SvgIcon,
-  Button,
-  IconButton
+  SvgIcon
 } from '@material-ui/core';
 import { Topbar } from '../components';
-import MuiAlert from '@material-ui/lab/Alert';
-import Collapse from '@material-ui/core/Collapse';
-import CloseIcon from '@material-ui/icons/Close';
 import moment from 'moment';
 import { GoogleMap, useJsApiLoader, DirectionsService, DirectionsRenderer } from '@react-google-maps/api';
 import NumberFormat from 'react-number-format';
 import DB from '../../util/firebaseinit';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import firebase from "firebase/app";
+//import CircularProgress from '@material-ui/core/CircularProgress';
+//import firebase from "firebase/app";
 
 function BicycleIcon(props) {
   return (
@@ -242,9 +236,9 @@ const useStyles = makeStyles(theme => ({
  }
 }));
 
-const TripDetails = props => {
+const HistoryDetails = props => {
   const classes = useStyles();
-  let history = useHistory();
+  //let history = useHistory();
   const { data } = props.location.state;
 
   const { isLoaded } = useJsApiLoader({
@@ -257,15 +251,13 @@ const TripDetails = props => {
   const [resVehicle, setResVehicle] = useState('');
   const [resPhoneNo, setPhoneNo] = useState('');
   const [isOnline, setIsOnline] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [serverError, setServerError] = useState(null);
-  const [failed, setFailed] = useState(false);
+//  const [loading, setLoading] = useState(false);
+//  const [serverError, setServerError] = useState(null);
+//  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
-    console.log("DRIVER TRIP ID:", data[0].driverid);
     DB.collection("riders").doc(data[0].driverid).get().then((doc) => {
       if (doc.exists) {
-        console.log("FOUND DRIVERS:", doc.data());
         setFullname(doc.data().name);
         setResVehicle(doc.data().vehicle);
         setPhoneNo(doc.data().phoneNumber);
@@ -284,7 +276,7 @@ const TripDetails = props => {
    }
  }, [response])
 
- const handleAssign = () => {
+ /*const handleAssign = () => {
    setLoading(true);
    const batch = DB.batch();
 
@@ -313,7 +305,7 @@ const TripDetails = props => {
     setFailed(true);
   });
  }
-
+*/
   return (
     <div className={classes.root}>
       <Hidden mdDown>
@@ -505,25 +497,6 @@ const TripDetails = props => {
           </div>
         </div>
         <div className={classes.rightArea}>
-            <Collapse in={failed}>
-              <MuiAlert
-                severity="error"
-                action={
-                   <IconButton
-                     aria-label="close"
-                     color="inherit"
-                     size="small"
-                     onClick={() => {
-                       setFailed(false);
-                     }}
-                   >
-                     <CloseIcon fontSize="inherit" />
-                   </IconButton>
-                 }
-                >
-                {serverError}
-             </MuiAlert>
-          </Collapse>
            <form className={classes.form} autoComplete="off">
              <div className={classes.popTitle}>
                  <Typography variant="h6">Driver Information</Typography>
@@ -669,25 +642,6 @@ const TripDetails = props => {
                      </FormControl>
                    </Grid>
                  </Grid>
-                 <Grid container style={{ marginTop: 0 }}>
-                   <Grid
-                     item
-                     lg={12}
-                     className={classes.btnContainer}
-                     >
-                     <Button
-                       type="button"
-                       variant="contained"
-                       fullWidth
-                       className={classes.buttonStyle}
-                       disabled={loading}
-                       onClick={handleAssign}
-                       >
-                       {loading && <CircularProgress size={18} className={classes.buttonSaveProgress} />}
-                       Unassign Driver
-                     </Button>
-                    </Grid>
-                  </Grid>
                </div>
              </form>
         </div>
@@ -696,8 +650,8 @@ const TripDetails = props => {
   );
 }
 
-TripDetails.propTypes = {
+HistoryDetails.propTypes = {
   data: PropTypes.array
 };
 
-export default TripDetails;
+export default HistoryDetails;

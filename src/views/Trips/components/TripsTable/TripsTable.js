@@ -164,7 +164,7 @@ const TripsTable = props => {
       console.log("")
 
       history.push({
-        pathname: '/trip',
+        pathname: '/trip/details',
         state:{ data: selectedData }
       });
     }

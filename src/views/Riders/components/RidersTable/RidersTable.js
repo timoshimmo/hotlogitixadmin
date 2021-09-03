@@ -26,21 +26,22 @@ import {
   Chip,
   IconButton,
   FormHelperText,
-  Link,
+  InputAdornment,
   Avatar,
   Typography,
-  SvgIcon
+  SvgIcon,
+  MenuItem
 } from '@material-ui/core';
 import { TableToolbar, TableHeader, RidersToolbar } from './components';
 //import NumberFormat from 'react-number-format';
-//import SERVICES from '../../../../util/webservices';
+import SERVICES from '../../../../util/webservices';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import MuiAlert from '@material-ui/lab/Alert';
 import Collapse from '@material-ui/core/Collapse';
 import CloseIcon from '@material-ui/icons/Close';
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import DB from '../../../../util/firebaseinit';
-//import DB from '../../../../util/firebaseinit';
 
 const schema = {
   fullName: {
@@ -58,8 +59,11 @@ const schema = {
   phoneNo: {
     presence: { allowEmpty: false, message: 'is required' },
     length: {
-      maximum: 18
+      maximum: 20
     }
+  },
+  vehicle: {
+    presence: { allowEmpty: false, message: 'is required' }
   },
   password: {
     presence: { allowEmpty: false, message: 'is required' },
@@ -88,127 +92,6 @@ const StyledTableCell = withStyles(() => ({
     borderBottom: '1px solid #D6D6D6',
   },
 }))(TableCell);
-
-/*
-
-<Drawer anchor="right" open={toggleCreate} onClose={handleCloseCreate}>
-    <div className={classes.formRoot} style={{ paddingBottom: 20, paddingTop: 20, paddingRight: 20}}>
-      <form className={classes.form} autoComplete="off">
-        <div className={classes.formArea}>
-          <InputLabel shrink htmlFor="fullname">
-            Fullname
-          </InputLabel>
-          <FormControl error={hasError('fullName')} className={classes.formComponent}>
-            <TextField
-                id="fullname-input"
-                className={classes.textField}
-                fullWidth
-                name="fullname"
-                type="text"
-                onChange={handleChange}
-                InputProps={{
-                  disableunderline: "true",
-                  classes: {
-                    notchedOutline: classes.notchStyle,
-                    input: classes.inputStyle
-                  },
-                  style: {fontSize: 12}
-                }}
-                aria-describedby="fullname-error"
-              />
-          <FormHelperText id="fullname-error" classes={{ error: classes.helper }}>
-            {  hasError('fullName') ? formState.errors.fullName[0] : null }
-          </FormHelperText>
-          </FormControl>
-          <InputLabel shrink htmlFor="phoneno">
-            Phone No.
-          </InputLabel>
-          <FormControl error={hasError('phoneNo')} className={classes.formComponent}>
-            <TextField
-                id="phoneno-input"
-                className={classes.textField}
-                fullWidth
-                name="phoneno"
-                type="text"
-                onChange={handleChange}
-                InputProps={{
-                  disableunderline: "true",
-                  classes: {
-                    notchedOutline: classes.notchStyle,
-                    input: classes.inputStyle
-                  },
-                  style: {fontSize: 12}
-                }}
-                aria-describedby="phoneno-error"
-              />
-              <FormHelperText id="phoneno-error" classes={{ error: classes.helper }}>
-                {  hasError('phoneNo') ? formState.errors.phoneno[0] : null }
-              </FormHelperText>
-          </FormControl>
-          <InputLabel shrink htmlFor="password">
-            Password
-          </InputLabel>
-          <FormControl error={hasError('password')} className={classes.formComponent}>
-          <TextField
-            id="password-input"
-            className={classes.textField}
-            fullWidth
-            InputProps={{
-              endAdornment: <InputAdornment position="end">
-              <IconButton
-                size='small'
-                aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
-              >
-                {showPassword ? <Visibility fontSize="small" /> : <VisibilityOff fontSize="small" />}
-              </IconButton>
-            </InputAdornment>,
-              disableunderline: 'true',
-              margindense: 'true',
-              classes: {
-                root: classes.inputRootStyle,
-                notchedOutline: classes.notchStyle,
-                input: classes.inputStyle
-              },
-              style: {fontSize: 12}
-            }}
-            name="password"
-            onChange={handleChange}
-            type={showPassword ? "text" : "password"}
-            aria-describedby="password-error"
-            />
-            <FormHelperText id="password-error" classes={{ error: classes.helper }}>
-              {  hasError('password') ? formState.errors.password[0] : null }
-            </FormHelperText>
-        </FormControl>
-        <Grid container justify="flex-end" spacing={3}>
-          <Grid
-            item
-            lg={3}
-            className={classes.btnContainer}
-            >
-            <Button
-              type="button"
-              variant="contained"
-              fullWidth
-              className={classes.buttonStyle}
-              onClick={handleCreate}
-              >
-              Create
-            </Button>
-
-          </Grid>
-
-        </Grid>
-
-        </div>
-      </form>
-    </div>
-</Drawer>
-
-
-*/
-
 
 
 const StyledTableRow = withStyles(() => ({
@@ -280,6 +163,25 @@ function VanIcon(props) {
     </SvgIcon>
   );
 }
+
+const vehicles = [
+  {
+    value: 'bicycle',
+    label: 'Bicycle',
+  },
+  {
+    value: 'motorbike',
+    label: 'Motorbike',
+  },
+  {
+    value: 'car',
+    label: 'Car',
+  },
+  {
+    value: 'van',
+    label: 'Van',
+  },
+];
 
 /*const schema = {
   newPassword: {
@@ -372,7 +274,7 @@ textField: {
   width: '100%',
   borderRadius: '70px',
   transition: theme.transitions.create(['background-color']),
-  padding: '10px 20px',
+  padding: '5px 10px',
   '&$focused': {
     backgroundrColor: '#F2F6FC',
   },
@@ -380,14 +282,13 @@ textField: {
    backgroundColor: '#F2F6FC',
  },
 },
-textArea: {
+selectStyle: {
   position: 'relative',
   backgroundColor: '#F2F4F7',
   border: '1px solid #fff',
   width: '100%',
-  borderRadius: '10px',
+  borderRadius: '70px',
   transition: theme.transitions.create(['background-color']),
-  padding: '10px 20px',
   '&$focused': {
     backgroundrColor: '#F2F6FC',
   },
@@ -578,13 +479,14 @@ const RidersTable = props => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
-//  const [showPassword, setShowPassword] = useState(false);
+  const [createLoading, setCreateLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 //  const [suspendLoading, setSuspendLoading] = useState(false);
 //  const [terminateLoading, setTerminateLoading] = useState(false);
 //  const [permitLoading, setPermitLoading] = useState(false);
 
   const [toggleDrawer, setToggleDrawer] = useState();
-  //const [toggleCreate, setToggleCreate] = useState();
+  const [toggleCreate, setToggleCreate] = useState();
   //const [profilePic, setProfilePic] = useState(null);
   const [resFullname, setFullname] = useState('');
   const [resVehicle, setResVehicle] = useState('');
@@ -592,10 +494,12 @@ const RidersTable = props => {
   const [userID, setUserID] = useState('');
   const [isOnline, setIsOnline] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
-  const [driverLicenses, setDriverLicenses] = useState({});
 
   const [serverError, setServerError] = useState(null);
   const [failed, setFailed] = useState(false);
+
+  const [createError, setCreateError] = useState(null);
+  const [createFailed, setCreateFailed] = useState(false);
 
   const [formState, setFormState] = useState({
     isValid: false,
@@ -630,31 +534,26 @@ const RidersTable = props => {
   const handlOpenDrawer = id => {
       setToggleDrawer(true);
       let selectedData = usersList.filter(datas => datas.id === id);
-      // let textsDatas = originalData.filter(textsData => textsData.postType === "text");
-  //    console.log("SELECTED:" + JSON.stringify(selectedData));
-    //  setSelectedList(selectedData);
       setUserID(id);
-    //  setProfilePic(selectedData[0].profilePicUrl);
       setFullname(selectedData[0].fullname);
       setPhoneNo(selectedData[0].mobileNo);
       setIsOnline(selectedData[0].isOnline);
       setIsVerified(selectedData[0].verified);
       setResVehicle(selectedData[0].vehicle);
-      setDriverLicenses(selectedData[0].licenses.driversLicense);
 
   }
 
-  /*const handleCloseCreate = () => {
+  const handleCloseCreate = () => {
     setToggleCreate(false);
   }
 
-  const handlOpenCreate = () => {
+  const handleOpenCreate = () => {
       setToggleCreate(true);
 
-  } */
+  }
 
   const handleChange = event => {
-    event.persist();
+    //event.persist();
 
     setFormState(formState => ({
       ...formState,
@@ -683,34 +582,35 @@ const RidersTable = props => {
     handleFilter(event.target.value);
   }
 
-/*  const handleCreate = () => {
-    if(!loading) {
-      setLoading(true);
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleCreate = () => {
+    if(!createLoading) {
+      setCreateLoading(true);
 
       const obj = {
          fullname: formState.values.fullName,
          phoneNo: formState.values.phoneNo,
          password: formState.values.password,
+         vehicle: formState.values.vehicle
       };
 
-      SERVICES.post(`riders/register`, obj)
+      SERVICES.post(`admin/create/rider`, obj)
       .then(response => {
         console.log(response);
-         setLoading(false);
-         setSuccessMsg('Rider created successfully!');
-         setSuccess(true);
-         setToggleDrawer(false);
-         //window.location.reload(true);
-
+         setCreateLoading(false);
+         window.location.reload(true);
       })
       .catch(function (error) {
-        setLoading(false);
-        setServerError('Error: There was a problem', error);
-        setFailed(true);
+        setCreateLoading(false);
+        setCreateError('Error: There was a problem', error);
+        setCreateFailed(true);
       })
     }
   }
-*/
+
   const handleVerify = () => {
     setLoading(true);
     DB.collection("riders").doc(userID).update({
@@ -854,7 +754,7 @@ const RidersTable = props => {
         <Card className={classes.cardRoot}>
           <CardContent className={classes.content}>
             <PerfectScrollbar>
-                <TableToolbar />
+                <TableToolbar handleOpenCreate={handleOpenCreate}/>
                   <TableContainer>
                       <Table
                         aria-labelledby="tables"
@@ -939,7 +839,7 @@ const RidersTable = props => {
                   <InputLabel shrink htmlFor="fullname">
                     Fullname
                   </InputLabel>
-                  <FormControl error={hasError('fullName')} className={classes.formComponent}>
+                  <FormControl className={classes.formComponent}>
                     <TextField
                         id="fullname-input"
                         className={classes.textField}
@@ -947,7 +847,6 @@ const RidersTable = props => {
                         disabled
                         name="fullname"
                         type="text"
-                        onChange={handleChange}
                         value={resFullname}
                         InputProps={{
                           disableunderline: "true",
@@ -959,14 +858,11 @@ const RidersTable = props => {
                         }}
                         aria-describedby="fullname-error"
                       />
-                  <FormHelperText id="fullname-error" classes={{ error: classes.helper }}>
-                    {  hasError('fullName') ? formState.errors.fullName[0] : null }
-                  </FormHelperText>
                   </FormControl>
                   <InputLabel shrink htmlFor="phoneno">
                     Phone No.
                   </InputLabel>
-                  <FormControl error={hasError('phoneNo')} className={classes.formComponent}>
+                  <FormControl className={classes.formComponent}>
                     <TextField
                         id="phoneno-input"
                         className={classes.textField}
@@ -974,7 +870,6 @@ const RidersTable = props => {
                         disabled
                         name="phoneno"
                         type="text"
-                        onChange={handleChange}
                         value={resPhoneNo}
                         InputProps={{
                           disableunderline: "true",
@@ -986,14 +881,11 @@ const RidersTable = props => {
                         }}
                         aria-describedby="phoneno-error"
                       />
-                      <FormHelperText id="phoneno-error" classes={{ error: classes.helper }}>
-                        {  hasError('phoneNo') ? formState.errors.phoneno[0] : null }
-                      </FormHelperText>
                     </FormControl>
                     <Grid container spacing={1} style={{ marginTop: 15 }}>
                       <Grid item lg={4}>
                         <InputLabel shrink>
-                          <h4>Status</h4>
+                          <Typography variant="title" align="center" component="h4">Status</Typography>
                         </InputLabel>
                         <FormControl className={classes.formComponent}>
                           {isOnline ?
@@ -1019,7 +911,7 @@ const RidersTable = props => {
                       </Grid>
                       <Grid item lg={4}>
                         <InputLabel shrink>
-                          <h4>Verification</h4>
+                          <Typography variant="title" align="center" component="h4">Verification</Typography>
                         </InputLabel>
                         <FormControl className={classes.formComponent}>
                           {isVerified ?
@@ -1045,7 +937,7 @@ const RidersTable = props => {
                       </Grid>
                       <Grid item lg={4}>
                         <InputLabel shrink>
-                          <h4>Vehicle</h4>
+                          <Typography variant="title" align="center" component="h4">Vehicle</Typography>
                         </InputLabel>
                         <FormControl className={classes.formComponent}>
                           {
@@ -1091,51 +983,7 @@ const RidersTable = props => {
                       </Grid>
                     </Grid>
                 </div>
-                <div className={classes.popTitle}>
-                    <Typography variant="h6">License Information</Typography>
-                </div>
-                <div className={classes.popTitle}>
-                    <Typography variant="span">Driver&apos;s license</Typography>
-                </div>
                 <div className={classes.formArea}>
-                  <Grid container justifyContent="flex-start">
-                    <Grid item lg={6} style={{ marginTop: 10, textAlign: 'left' }}>
-                      <Typography variant="subtitle2" component="h6">
-                        First name
-                      </Typography>
-                      <Typography variant="caption" component="span">{driverLicenses["idFirstName"]}</Typography>
-                    </Grid>
-
-                    <Grid item lg={6} style={{ marginTop: 10, textAlign: 'left' }}>
-                      <Typography variant="subtitle2" component="h6">
-                        Last name
-                      </Typography>
-                      <Typography variant="caption" component="span">{driverLicenses["idLastName"]}</Typography>
-                    </Grid>
-                    <Grid item lg={6} style={{ marginTop: 10, textAlign: 'left' }}>
-                        <Typography variant="subtitle2" component="h6">
-                          ID Number
-                        </Typography>
-                        <Typography variant="caption" component="span">{driverLicenses["idNumber"]}</Typography>
-                    </Grid>
-                    <Grid item lg={6} style={{ marginTop: 10, textAlign: 'left' }}>
-                        <Typography variant="subtitle2" component="h6">
-                          Expiry Date
-                        </Typography>
-                        <Typography variant="caption" component="span">{driverLicenses["expiryDate"]}</Typography>
-                    </Grid>
-                    <Grid item lg={12} style={{ marginTop: 10, textAlign: 'left' }}>
-                      <Typography variant="subtitle2" component="h6">
-                        Document Link
-                      </Typography>
-                      <Typography style={{ width: '100%' }}>
-                        <Link href={driverLicenses["documentUrl"]} target="_blank" rel="noopener" style={{ fontSize: 13 }}>
-                          View driver license
-                          <OpenInNewIcon style={{ fontSize: 13 }}/>
-                       </Link>
-                      </Typography>
-                    </Grid>
-                  </Grid>
                   {!isVerified &&
                     (<Grid container justify="flex-end" spacing={3} style={{ marginTop: 0 }}>
                       <Grid
@@ -1177,6 +1025,168 @@ const RidersTable = props => {
                     </Grid>
                     )
                   }
+                </div>
+              </form>
+            </div>
+        </Drawer>
+        <Drawer anchor="right" open={toggleCreate} onClose={handleCloseCreate}>
+            <div className={classes.formRoot} style={{ paddingBottom: 20, paddingTop: 20, paddingRight: 20}}>
+              <Collapse in={createFailed}>
+                <MuiAlert
+                  severity="error"
+                  action={
+                     <IconButton
+                       aria-label="close"
+                       color="inherit"
+                       size="small"
+                       onClick={() => {
+                         setCreateFailed(false);
+                       }}
+                     >
+                       <CloseIcon fontSize="inherit" />
+                     </IconButton>
+                   }
+                  >
+                  {createError}
+               </MuiAlert>
+            </Collapse>
+              <form className={classes.form} autoComplete="off">
+                <div className={classes.formArea}>
+                  <InputLabel shrink htmlFor="fullName">
+                    Fullname
+                  </InputLabel>
+                  <FormControl error={hasError('fullName')} className={classes.formComponent}>
+                    <TextField
+                        id="fullname-input"
+                        className={classes.textField}
+                        fullWidth
+                        name="fullName"
+                        type="text"
+                        onChange={handleChange}
+                        InputProps={{
+                          disableunderline: "true",
+                          classes: {
+                            notchedOutline: classes.notchStyle,
+                            input: classes.inputStyle
+                          },
+                          style: {fontSize: 12}
+                        }}
+                        aria-describedby="fullname-error"
+                      />
+                  <FormHelperText id="fullname-error" classes={{ error: classes.helper }}>
+                    {  hasError('fullName') ? formState.errors.fullName[0] : null }
+                  </FormHelperText>
+                  </FormControl>
+                  <InputLabel shrink htmlFor="phoneno">
+                    Phone No.
+                  </InputLabel>
+                  <FormControl error={hasError('phoneNo')} className={classes.formComponent}>
+                    <TextField
+                        id="phoneno-input"
+                        className={classes.textField}
+                        fullWidth
+                        name="phoneNo"
+                        type="text"
+                        onChange={handleChange}
+                        InputProps={{
+                          disableunderline: "true",
+                          classes: {
+                            notchedOutline: classes.notchStyle,
+                            input: classes.inputStyle
+                          },
+                          style: {fontSize: 12}
+                        }}
+                        aria-describedby="phoneno-error"
+                      />
+                      <FormHelperText id="phoneno-error" classes={{ error: classes.helper }}>
+                        {  hasError('phoneNo') ? formState.errors.phoneNo[0] : null }
+                      </FormHelperText>
+                  </FormControl>
+                  <InputLabel shrink htmlFor="vehicle">
+                    Vehicle
+                  </InputLabel>
+                  <FormControl error={hasError('vehicle')} className={classes.formComponent}>
+                    <TextField
+                      id="vehicle-input"
+                      className={classes.selectStyle}
+                      select
+                      name="vehicle"
+                      value={formState.values.vehicle}
+                      onChange={handleChange}
+                      InputProps={{
+                        disableunderline: "true",
+                        classes: {
+                          notchedOutline: classes.notchStyle,
+                        },
+                        style: {fontSize: 12}
+                      }}
+                      aria-describedby="vehicle-error"
+                    >
+                      {vehicles.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                    <FormHelperText id="vehicle-error" classes={{ error: classes.helper }}>
+                      {  hasError('vehicle') ? formState.errors.vehicle[0] : null }
+                    </FormHelperText>
+                  </FormControl>
+                  <InputLabel shrink htmlFor="password">
+                    Password
+                  </InputLabel>
+                  <FormControl error={hasError('password')} className={classes.formComponent}>
+                  <TextField
+                    id="password-input"
+                    className={classes.textField}
+                    fullWidth
+                    InputProps={{
+                      endAdornment: <InputAdornment position="end">
+                      <IconButton
+                        size='small'
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                      >
+                        {showPassword ? <Visibility fontSize="small" /> : <VisibilityOff fontSize="small" />}
+                      </IconButton>
+                    </InputAdornment>,
+                      disableunderline: 'true',
+                      margindense: 'true',
+                      classes: {
+                        root: classes.inputRootStyle,
+                        notchedOutline: classes.notchStyle,
+                        input: classes.inputStyle
+                      },
+                      style: {fontSize: 12}
+                    }}
+                    name="password"
+                    onChange={handleChange}
+                    type={showPassword ? "text" : "password"}
+                    aria-describedby="password-error"
+                    />
+                    <FormHelperText id="password-error" classes={{ error: classes.helper }}>
+                      {  hasError('password') ? formState.errors.password[0] : null }
+                    </FormHelperText>
+                </FormControl>
+                <Grid container>
+                  <Grid
+                    item
+                    lg={12}
+                    className={classes.btnContainer}
+                    >
+                    <Button
+                      type="button"
+                      variant="contained"
+                      fullWidth
+                      className={classes.buttonStyle}
+                      onClick={handleCreate}
+                      disabled={createLoading}
+                      >
+                      {createLoading && <CircularProgress size={18} className={classes.buttonSaveProgress} />}
+                      Create
+                    </Button>
+                  </Grid>
+                  </Grid>
                 </div>
               </form>
             </div>

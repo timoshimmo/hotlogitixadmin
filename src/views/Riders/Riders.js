@@ -5,8 +5,6 @@ import {
   Icon
 } from '@material-ui/core';
 import { Topbar } from '../components';
-//import SERVICES from '../../util/webservices';
-//import { history } from '../../helpers';
 import { RidersTable } from './components';
 import DB from '../../util/firebaseinit';
 

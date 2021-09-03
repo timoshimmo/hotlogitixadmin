@@ -238,8 +238,9 @@ const History = () => {
         .then((querySnapshot) => {
           var arr = [];
           querySnapshot.forEach((doc) => {
-            arr.push({"id": doc.id, "date": doc.data().dateCreated, "from": doc.data().pickup.address, "to": doc.data().delivery.address,
-              "weight": doc.data().package.weight, "distance": doc.data().distance, "cost": doc.data().transaction.cost});
+            arr.push({"id": doc.id, "date": doc.data().dateCreated, "pickup": doc.data().pickup, "delivery": doc.data().delivery,
+              "weight": doc.data().package.weight, "distance": doc.data().distance, "cost": doc.data().transaction.cost,
+              "transaction": doc.data().transaction, "package": doc.data().package, "driverid": doc.data().driverid});
           });
           setHistoryList(arr);
           setFilteredHistory(arr);

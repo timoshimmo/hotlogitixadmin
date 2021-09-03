@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -125,6 +126,7 @@ const HistoryTable = props => {
   const { className, historyList, handleFilter, ...rest } = props;
 
   const classes = useStyles();
+  let history = useHistory();
 
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('dateOTransaction');
@@ -151,6 +153,18 @@ const HistoryTable = props => {
   const handleSearchChange = event => {
     handleFilter(event.target.value);
   }
+
+  const handleOpenHistoryDetails = id => {
+
+      let selectedData = historyList.filter(datas => datas.id === id);
+
+      console.log("")
+
+      history.push({
+        pathname: '/history/details',
+        state:{ data: selectedData }
+      });
+    }
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - historyList.length) : 0;
@@ -199,7 +213,7 @@ const HistoryTable = props => {
                                            overflow="hidden"
                                            bgcolor="inherit"
                                          >
-                                            {row.from}
+                                            {row.pickup.address}
                                           </Box>
                                       </StyledTableCell>
                                       <StyledTableCell style={{ maxWidth: 150, whiteSpace: 'nowrap' }}>
@@ -210,7 +224,7 @@ const HistoryTable = props => {
                                            overflow="hidden"
                                            bgcolor="inherit"
                                          >
-                                           {row.to}
+                                           {row.delivery.address}
                                          </Box>
                                       </StyledTableCell>
                                       <StyledTableCell align="center">
@@ -226,7 +240,9 @@ const HistoryTable = props => {
                                         <Button
                                           variant="outlined"
                                           startIcon={<MapOutlinedIcon style={{ fontSize: 14 }} />}
-                                          className={classes.buttonStyle}>
+                                          className={classes.buttonStyle}
+                                          onClick={()=>handleOpenHistoryDetails(row.id)}
+                                          >
                                             View
                                         </Button>
                                       </StyledTableCell>

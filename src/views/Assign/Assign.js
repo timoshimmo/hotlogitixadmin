@@ -263,7 +263,7 @@ const Assign = props => {
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
-    DB.collection("riders").where("isOnline", "==", true).where("status", "==", "available")
+    DB.collection("riders").where("isOnline", "==", true).where("assigned", "==", false)
     .onSnapshot((querySnapshot) => {
         var arr = [];
         querySnapshot.forEach((doc) => {
@@ -315,7 +315,7 @@ const Assign = props => {
    const ridersRef = DB.collection("riders").doc(selectedRider)
    batch.update(ridersRef,
      {
-       "status": "busy"
+       "assigned": true
      }
    );
 

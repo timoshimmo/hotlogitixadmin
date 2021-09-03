@@ -3,14 +3,11 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import FilterListIcon from '@material-ui/icons/FilterList';
 import {
   Button,
-  Grid,
-  Tooltip,
-  IconButton
+  Grid
 } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
 
 const useToolbarStyles = makeStyles(theme => ({
   root: {
@@ -23,13 +20,21 @@ const useToolbarStyles = makeStyles(theme => ({
   },
 
   buttonStyle: {
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    borderColor: '#fff',
     textTransform: 'none',
-    color: theme.palette.success.main,
-    fontSize: 12,
-    marginRight: 15,
-    borderColor: theme.palette.success.main,
-    "&:hover": {
-      borderColor: theme.palette.success.main,
+    fontSize: 13,
+    minHeight: 40,
+    fontWeight: 400,
+    color: '#fff',
+    font: 'Helvetica Neue',
+    padding: '0px 15px',
+    backgroundColor: theme.palette.success.main,
+    '&:hover': {
+      backgroundColor: theme.palette.success.light,
+      color: "#fff",
     }
   },
 }));
@@ -59,18 +64,13 @@ const TableToolbar = props => {
         <Grid container justifyContent="flex-end">
             <Grid item>
               <Button
-                variant="outlined"
+                variant="contained"
                 className={classes.buttonStyle}
-                startIcon={<AddIcon style={{ fontSize: 14 }} />}
+                startIcon={<PersonAddIcon style={{ fontSize: 14 }} />}
                 onClick={handlOpenCreateDrawer}
                 >
                  New Admin
               </Button>
-              <Tooltip title="Filter users">
-               <IconButton aria-label="filter users">
-                 <FilterListIcon />
-               </IconButton>
-             </Tooltip>
             </Grid>
         </Grid>
 
