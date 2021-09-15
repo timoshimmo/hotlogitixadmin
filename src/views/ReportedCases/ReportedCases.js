@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import {
-  Hidden,
   Icon
 } from '@material-ui/core';
 
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
-import { Topbar } from '../components';
 import SERVICES from '../../util/webservices';
 import { history } from '../../helpers';
 import { UsersTable } from './components';
@@ -287,9 +285,6 @@ const handleFailed = (event, reason) => {
 
   return (
     <div className={classes.root}>
-      <Hidden mdDown>
-        <Topbar title={'Reported Cases'} />
-      </Hidden>
       <div className={classes.body}>
           {loading && <Icon className="fas fa-circle-notch fa-spin" style={{ color: '#2688FB', fontSize: 40, position: 'relative', top: 40, left: '50%', }} />}
           <UsersTable usersList={filteredUsers} handleFilter={handleFilter} />

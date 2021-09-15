@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import {
-  Hidden,
   Icon
 } from '@material-ui/core';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
-import { Topbar } from '../components';
 //import { history } from '../../helpers';
 import { OrdersTable } from './components';
 import DB from '../../util/firebaseinit';
@@ -304,9 +302,6 @@ const handleFailed = (event, reason) => {
 
   return (
     <div className={classes.root}>
-      <Hidden mdDown>
-        <Topbar title={'Orders'} />
-      </Hidden>
       <div className={classes.body}>
           {loading && <Icon className="fas fa-circle-notch fa-spin" style={{ color: '#2688FB', fontSize: 40, position: 'relative', top: 40, left: '50%', }} />}
           <OrdersTable orderList={filteredOrders} handleFilter={handleFilter} />

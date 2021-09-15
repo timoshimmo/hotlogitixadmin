@@ -5,7 +5,6 @@ import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {
-  Hidden,
   Grid,
   Typography,
   Card,
@@ -20,7 +19,6 @@ import {
   Button,
   IconButton
 } from '@material-ui/core';
-import { Topbar } from '../components';
 import MuiAlert from '@material-ui/lab/Alert';
 import Collapse from '@material-ui/core/Collapse';
 import CloseIcon from '@material-ui/icons/Close';
@@ -316,9 +314,6 @@ const TripDetails = props => {
 
   return (
     <div className={classes.root}>
-      <Hidden mdDown>
-        <Topbar title={'Riders'} />
-      </Hidden>
       <div className={classes.mainArea}>
         <div className={classes.leftArea}>
           <div className={classes.mapArea}>

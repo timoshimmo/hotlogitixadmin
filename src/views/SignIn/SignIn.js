@@ -107,6 +107,11 @@ const useStyles = makeStyles(theme => ({
   },
   quoteText: {
     color: '#fff',
+    fontWeight: 400,
+    fontSize: 15
+  },
+  quoteSubtitle: {
+    color: '#fff',
     fontWeight: 300,
     fontSize: 13
   },
@@ -754,26 +759,11 @@ const SignIn = () => {
             <div className={classes.quote}>
               <div className={classes.quoteInner}>
                 <Typography className={classes.quoteText} variant="button" display="block" gutterBottom>
-                 Hotlogistix Users
+                 Hotlogistix Administrators
                 </Typography>
-                <div className={classes.person}>
-                  <Typography
-                    className={classes.name}
-                    variant="h6"
-                    display="block"
-                    gutterBottom
-                  >
-                    Jordan Smart
-                  </Typography>
-                  <Typography
-                    className={classes.bio}
-                    variant="caption"
-                    display="block"
-                    gutterBottom
-                  >
-                    Cras eu elit congue, placerat dui ut, tincidunt nisl. Nulla leo elit, pharetra bibendum justo quis, cursus consectetur erat. Nulla leo elit, pharetra bibendum justo quis, cursus consectetur erat
-                  </Typography>
-                </div>
+                <Typography className={classes.quoteSubtitle} variant="caption" component="span" gutterBottom>
+                 Manage and be part of the future of package delivery in Nigeria and then Africa and then to the world.
+                </Typography>
               </div>
             </div>
           </Grid>

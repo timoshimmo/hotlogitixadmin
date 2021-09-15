@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {
-  Hidden,
   Grid,
   Typography,
   Card,
@@ -17,7 +16,6 @@ import {
   Chip,
   SvgIcon
 } from '@material-ui/core';
-import { Topbar } from '../components';
 import moment from 'moment';
 import { GoogleMap, useJsApiLoader, DirectionsService, DirectionsRenderer } from '@react-google-maps/api';
 import NumberFormat from 'react-number-format';
@@ -308,9 +306,6 @@ const HistoryDetails = props => {
 */
   return (
     <div className={classes.root}>
-      <Hidden mdDown>
-        <Topbar title={'Riders'} />
-      </Hidden>
       <div className={classes.mainArea}>
         <div className={classes.leftArea}>
           <div className={classes.mapArea}>

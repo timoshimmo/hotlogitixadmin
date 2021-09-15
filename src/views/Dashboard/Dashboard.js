@@ -4,7 +4,6 @@ import {
   Grid,
   Typography,
 } from '@material-ui/core';
-import { Topbar } from '../components';
 import { OverviewArea, TripRequestArea, OrderSummaryArea } from './components'
 
 
@@ -39,7 +38,6 @@ const Dashboard = () => {
 
     return(
       <div className={classes.root}>
-        <Topbar title={'Dashboard'} />
         <Grid
           className={classes.grid}
           container

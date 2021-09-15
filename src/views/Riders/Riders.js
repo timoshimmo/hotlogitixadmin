@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import {
-  Hidden,
   Icon
 } from '@material-ui/core';
-import { Topbar } from '../components';
 import { RidersTable } from './components';
 import DB from '../../util/firebaseinit';
 
@@ -258,9 +256,6 @@ const Users = () => {
 
   return (
     <div className={classes.root}>
-      <Hidden mdDown>
-        <Topbar title={'Riders'} />
-      </Hidden>
       <div className={classes.body}>
           {loading ?
             <Icon className="fas fa-circle-notch fa-spin" style={{ color: '#2688FB', fontSize: 40, position: 'relative', top: 40, left: '50%', }} />

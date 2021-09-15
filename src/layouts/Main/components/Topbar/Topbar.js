@@ -54,7 +54,11 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.primary.main,
     fontSize: 14
   },
-
+  titleStyle: {
+    fontSize: 50,
+    color: '#F4F6F8',
+    fontWeight: 900
+  }
   }));
 
   function SettingsIcon(props) {
@@ -142,7 +146,7 @@ const useStyles = makeStyles(theme => ({
   const Topbar = props => {
 
     const classes = useStyles();
-    const { title } = props;
+    const { title, handlOpenDrawer } = props;
 
     let userData = null;
     if (typeof localStorage !== 'undefined') {
@@ -170,12 +174,14 @@ const useStyles = makeStyles(theme => ({
             <Grid
               item
               lg={6}
+              style={{ display: 'flex', alignItems: 'center' }}
             >
-              <Typography variant="h6">{title}</Typography>
+              <Typography variant="h6" className={classes.titleStyle}>{title}</Typography>
             </Grid>
             <Grid
               item
               lg={6}
+              style={{ display: 'flex', alignItems: 'center' }}
             >
                 <Grid container alignItems="center" justifyContent="flex-end" spacing={2}>
                   <Grid item>
@@ -192,7 +198,8 @@ const useStyles = makeStyles(theme => ({
                   <Button
                     startIcon={<UsersIcon style={{ color: '#363a46', fontSize: 18 }} />}
                     color="primary"
-                    className={classes.buttonStyle}>
+                    className={classes.buttonStyle}
+                    onClick={handlOpenDrawer}>
                       {userData.name}
                   </Button>
                 </Grid>
@@ -205,7 +212,8 @@ const useStyles = makeStyles(theme => ({
 };
 
 Topbar.propTypes = {
-  title: PropTypes.string
+  title: PropTypes.string,
+  handlOpenDrawer: PropTypes.func
 };
 
 export default Topbar;
